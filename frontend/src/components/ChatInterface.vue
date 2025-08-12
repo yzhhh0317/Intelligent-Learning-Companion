@@ -1,9 +1,9 @@
 <template>
   <div class="chat-interface">
-    <div class="page-header">
+    <!-- <div class="page-header">
       <h2>🤖 智能问答</h2>
       <p>基于你的个人知识库，提供个性化学习建议</p>
-    </div>
+    </div> -->
 
     <!-- RAG说明 -->
     <div class="rag-info">
@@ -203,7 +203,9 @@ const formatTime = (date) => {
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-height: 600px;
+  min-height: 800px;
+  max-width: 1400px;
+  margin: 15px;
 }
 
 .page-header {

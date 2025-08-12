@@ -1,0 +1,384 @@
+{"level":"info","message":"🚀 初始化RAG服务...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:05:44"}
+{"level":"info","message":"📥 从MongoDB加载向量数据...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:05:44"}
+{"level":"info","message":"✅ 成功加载 0 个文档，0 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:05:44"}
+{"level":"info","message":"✅ RAG服务初始化完成","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:05:44"}
+{"level":"info","message":"📊 已加载 0 个向量，0 个文档","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:05:44"}
+{"level":"info","message":"🚀 初始化RAG服务...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:10:17"}
+{"level":"info","message":"📥 从MongoDB加载向量数据...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:10:17"}
+{"level":"info","message":"✅ 成功加载 0 个文档，0 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:10:17"}
+{"level":"info","message":"✅ RAG服务初始化完成","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:10:17"}
+{"level":"info","message":"📊 已加载 0 个向量，0 个文档","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:10:17"}
+{"level":"info","message":"🧠 初始化向量存储系统...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:19:00"}
+{"level":"info","message":"🚀 初始化RAG服务...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:19:00"}
+{"level":"info","message":"📥 从MongoDB加载向量数据...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:19:00"}
+{"level":"info","message":"✅ 成功加载 0 个文档，0 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:19:00"}
+{"level":"info","message":"✅ RAG服务初始化完成","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:19:00"}
+{"level":"info","message":"📊 已加载 0 个向量，0 个文档","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:19:00"}
+{"level":"info","message":"✅ 向量存储初始化成功","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:19:00"}
+{"level":"info","message":"📊 向量存储统计:","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:19:00"}
+{"level":"info","message":"   • 文档数量: 0","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:19:00"}
+{"level":"info","message":"   • 向量块数: 0","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:19:00"}
+{"level":"info","message":"   • 内存使用: 21MB","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:19:00"}
+{"level":"info","message":"   • 存储类型: 内存 + MongoDB持久化","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:19:00"}
+{"level":"info","message":"🧠 初始化向量存储系统...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:24:04"}
+{"level":"info","message":"🚀 初始化RAG服务...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:24:04"}
+{"level":"info","message":"📥 从MongoDB加载向量数据...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:24:04"}
+{"level":"info","message":"✅ 成功加载 0 个文档，0 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:24:04"}
+{"level":"info","message":"✅ RAG服务初始化完成","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:24:04"}
+{"level":"info","message":"📊 已加载 0 个向量，0 个文档","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:24:04"}
+{"level":"info","message":"✅ 向量存储初始化成功","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:24:04"}
+{"level":"info","message":"📊 向量存储统计:","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:24:04"}
+{"level":"info","message":"   • 文档数量: 0","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:24:04"}
+{"level":"info","message":"   • 向量块数: 0","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:24:04"}
+{"level":"info","message":"   • 内存使用: 21MB","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:24:04"}
+{"level":"info","message":"   • 存储类型: 内存 + MongoDB持久化","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:24:04"}
+{"level":"info","message":"🧠 初始化向量存储系统...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:25:59"}
+{"level":"info","message":"🚀 初始化RAG服务...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:25:59"}
+{"level":"info","message":"📥 从MongoDB加载向量数据...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:25:59"}
+{"level":"info","message":"✅ 成功加载 0 个文档，0 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:25:59"}
+{"level":"info","message":"✅ RAG服务初始化完成","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:25:59"}
+{"level":"info","message":"📊 已加载 0 个向量，0 个文档","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:25:59"}
+{"level":"info","message":"✅ 向量存储初始化成功","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:25:59"}
+{"level":"info","message":"📊 向量存储统计:","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:25:59"}
+{"level":"info","message":"   • 文档数量: 0","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:25:59"}
+{"level":"info","message":"   • 向量块数: 0","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:25:59"}
+{"level":"info","message":"   • 内存使用: 21MB","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:25:59"}
+{"level":"info","message":"   • 存储类型: 内存 + MongoDB持久化","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:25:59"}
+{"level":"info","message":"🧠 初始化向量存储系统...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:27:37"}
+{"level":"info","message":"🚀 初始化RAG服务...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:27:37"}
+{"level":"info","message":"📥 从MongoDB加载向量数据...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:27:37"}
+{"level":"info","message":"✅ 成功加载 0 个文档，0 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:27:37"}
+{"level":"info","message":"✅ RAG服务初始化完成","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:27:37"}
+{"level":"info","message":"📊 已加载 0 个向量，0 个文档","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:27:37"}
+{"level":"info","message":"✅ 向量存储初始化成功","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:27:37"}
+{"level":"info","message":"📊 向量存储统计:","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:27:37"}
+{"level":"info","message":"   • 文档数量: 0","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:27:37"}
+{"level":"info","message":"   • 向量块数: 0","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:27:37"}
+{"level":"info","message":"   • 内存使用: 22MB","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:27:37"}
+{"level":"info","message":"   • 存储类型: 内存 + MongoDB持久化","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:27:37"}
+{"level":"info","message":"🧠 初始化向量存储系统...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:29:18"}
+{"level":"info","message":"🚀 初始化RAG服务...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:29:18"}
+{"level":"info","message":"📥 从MongoDB加载向量数据...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:29:18"}
+{"level":"info","message":"✅ 成功加载 0 个文档，0 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:29:18"}
+{"level":"info","message":"✅ RAG服务初始化完成","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:29:18"}
+{"level":"info","message":"📊 已加载 0 个向量，0 个文档","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:29:18"}
+{"level":"info","message":"✅ 向量存储初始化成功","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:29:18"}
+{"level":"info","message":"📊 向量存储统计:","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:29:18"}
+{"level":"info","message":"   • 文档数量: 0","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:29:18"}
+{"level":"info","message":"   • 向量块数: 0","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:29:18"}
+{"level":"info","message":"   • 内存使用: 21MB","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:29:18"}
+{"level":"info","message":"   • 存储类型: 内存 + MongoDB持久化","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:29:18"}
+{"level":"info","message":"🧠 初始化向量存储系统...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:32:43"}
+{"level":"info","message":"🚀 初始化RAG服务...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:32:43"}
+{"level":"info","message":"📥 从MongoDB加载向量数据...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:32:43"}
+{"level":"info","message":"✅ 成功加载 0 个文档，0 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:32:43"}
+{"level":"info","message":"✅ RAG服务初始化完成","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:32:43"}
+{"level":"info","message":"📊 已加载 0 个向量，0 个文档","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:32:43"}
+{"level":"info","message":"✅ 向量存储初始化成功","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:32:43"}
+{"level":"info","message":"📊 向量存储统计:","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:32:43"}
+{"level":"info","message":"   • 文档数量: 0","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:32:43"}
+{"level":"info","message":"   • 向量块数: 0","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:32:43"}
+{"level":"info","message":"   • 内存使用: 22MB","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:32:43"}
+{"level":"info","message":"   • 存储类型: 内存 + MongoDB持久化","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:32:43"}
+{"level":"info","message":"🚀 初始化RAG服务...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:37:44"}
+{"level":"info","message":"📥 从MongoDB加载向量数据...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:37:44"}
+{"level":"info","message":"✅ 成功加载 0 个文档，0 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:37:44"}
+{"level":"info","message":"✅ RAG服务初始化完成","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:37:44"}
+{"level":"info","message":"📊 已加载 0 个向量，0 个文档","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:37:44"}
+{"level":"info","message":"🚀 初始化RAG服务...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:37:53"}
+{"level":"info","message":"📥 从MongoDB加载向量数据...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:37:53"}
+{"level":"info","message":"✅ 成功加载 0 个文档，0 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:37:53"}
+{"level":"info","message":"✅ RAG服务初始化完成","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:37:53"}
+{"level":"info","message":"📊 已加载 0 个向量，0 个文档","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:37:53"}
+{"level":"info","message":"📝 笔记创建成功: 《低轨卫星网络技术进展与挑战》  \n（注：共14字，精准涵盖LEO卫星网络的核心要素，突出\"技术发展\"与\"挑战\"双重维度，符合学术论文标题规范） (ID: 1b91c6ff-5531-439b-9a8b-0b15e0589732)","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:39:53"}
+{"level":"info","message":"📄 处理文档: \n\n《低轨卫星网络技术进展与挑战》  \n（注：共14字，精准涵盖LEO卫星网络的核心要素，突出\"技术发展\"与\"挑战\"双重维度，符合学术论文标题规范）","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:39:53"}
+{"level":"info","message":"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:39:53"}
+{"level":"info","message":"✂️ 分块完成: 2 个语义块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:39:53"}
+{"level":"info","message":"💾 保存向量数据到MongoDB...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:39:53"}
+{"level":"info","message":"🔄 更新了现有文档: \n\n《低轨卫星网络技术进展与挑战》  \n（注：共14字，精准涵盖LEO卫星网络的核心要素，突出\"技术发展\"与\"挑战\"双重维度，符合学术论文标题规范）","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:39:53"}
+{"level":"info","message":"🔢 向量生成: 2 个embedding向量","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:39:53"}
+{"level":"info","message":"💾 存储完成: 文档ID 014f677f-5f59-4588-8c78-c64e9a49b895","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:39:53"}
+{"level":"info","message":"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:39:53"}
+{"level":"info","message":"🔍 执行混合搜索: \"AIS\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:44"}
+{"level":"info","message":"📊 搜索范围: 2 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:44"}
+{"level":"info","message":"✅ 搜索完成: 找到 0 个候选，返回前 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:44"}
+{"level":"info","message":"🔍 执行混合搜索: \"低地球\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:55"}
+{"level":"info","message":"📊 搜索范围: 2 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:55"}
+{"level":"info","message":"✅ 搜索完成: 找到 1 个候选，返回前 1 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:55"}
+{"level":"info","message":"🎯 最高分数: 10.7%","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:55"}
+{"level":"info","message":"🔍 执行混合搜索: \"低地球\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:56"}
+{"level":"info","message":"📊 搜索范围: 2 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:56"}
+{"level":"info","message":"✅ 搜索完成: 找到 1 个候选，返回前 1 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:56"}
+{"level":"info","message":"🎯 最高分数: 10.7%","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:56"}
+{"level":"info","message":"🔍 执行混合搜索: \"低地球\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:57"}
+{"level":"info","message":"📊 搜索范围: 2 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:57"}
+{"level":"info","message":"✅ 搜索完成: 找到 1 个候选，返回前 1 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:57"}
+{"level":"info","message":"🎯 最高分数: 10.7%","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:57"}
+{"level":"info","message":"🔍 执行混合搜索: \"低地球\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:57"}
+{"level":"info","message":"📊 搜索范围: 2 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:57"}
+{"level":"info","message":"✅ 搜索完成: 找到 1 个候选，返回前 1 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:57"}
+{"level":"info","message":"🎯 最高分数: 10.7%","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:40:57"}
+{"level":"info","message":"🔍 执行混合搜索: \"LEO\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:41:05"}
+{"level":"info","message":"📊 搜索范围: 2 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:41:05"}
+{"level":"info","message":"✅ 搜索完成: 找到 0 个候选，返回前 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:41:05"}
+{"level":"info","message":"📄 处理文档: 未命名文档","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:41:37"}
+{"level":"info","message":"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:41:37"}
+{"level":"info","message":"✂️ 分块完成: 4 个语义块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:41:37"}
+{"level":"info","message":"💾 保存向量数据到MongoDB...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:41:37"}
+{"level":"info","message":"📝 创建了新文档: 未命名文档","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:41:37"}
+{"level":"info","message":"🔢 向量生成: 4 个embedding向量","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:41:37"}
+{"level":"info","message":"💾 存储完成: 文档ID 46268ba6-85e6-494a-b06d-a85ba9641b3a","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:41:37"}
+{"level":"info","message":"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:41:37"}
+{"level":"info","message":"📝 笔记创建成功: 未命名文档 (ID: ebd4d090-dad2-4145-a52d-f28acfbd88d5)","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:41:37"}
+{"level":"info","message":"🔍 执行混合搜索: \"LEO\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:42:21"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:42:21"}
+{"level":"info","message":"✅ 搜索完成: 找到 0 个候选，返回前 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:42:21"}
+{"level":"info","message":"🔍 执行混合搜索: \"什么是AIS-CCR\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:42:26"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:42:26"}
+{"level":"info","message":"✅ 搜索完成: 找到 1 个候选，返回前 1 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:42:26"}
+{"level":"info","message":"🎯 最高分数: 58.2%","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:42:26"}
+{"level":"info","message":"🔍 执行混合搜索: \"OSPF\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:43:48"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:43:48"}
+{"level":"info","message":"✅ 搜索完成: 找到 0 个候选，返回前 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:43:48"}
+{"level":"info","message":"🚀 初始化增强版RAG服务...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:54:48"}
+{"0":"c","1":"o","10":"I","11":"M","12":"E","13":"D","14":"O","15":"U","16":"T","17":" ","18":"1","19":"2","2":"n","20":"8","21":".","22":"2","23":"4","24":"2","25":".","26":"2","27":"4","28":"5","29":".","3":"n","30":"1","31":"2","32":"5","33":":","34":"4","35":"4","36":"3","4":"e","5":"c","6":"t","7":" ","8":"E","9":"T","level":"error","message":"HuggingFace API调用失败:","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:09"}
+{"level":"warn","message":"⚠️ HuggingFace API 测试失败，将使用备用TF-IDF算法","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:09"}
+{"level":"warn","message":"错误详情: connect ETIMEDOUT 128.242.245.125:443","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:09"}
+{"level":"info","message":"📥 从MongoDB加载向量数据...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:09"}
+{"level":"info","message":"✅ 成功加载 2 个文档，6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:09"}
+{"level":"info","message":"✅ 增强版RAG服务初始化完成","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:09"}
+{"level":"info","message":"📊 向量化方案: TF-IDF算法","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:09"}
+{"level":"info","message":"📏 向量维度: 100","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:09"}
+{"level":"info","message":"📦 已加载 6 个向量，2 个文档","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:09"}
+{"level":"info","message":"🚀 初始化增强版RAG服务...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:27"}
+{"0":"c","1":"o","10":"I","11":"M","12":"E","13":"D","14":"O","15":"U","16":"T","17":" ","18":"1","19":"2","2":"n","20":"8","21":".","22":"2","23":"4","24":"2","25":".","26":"2","27":"4","28":"5","29":".","3":"n","30":"1","31":"2","32":"5","33":":","34":"4","35":"4","36":"3","4":"e","5":"c","6":"t","7":" ","8":"E","9":"T","level":"error","message":"HuggingFace API调用失败:","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:48"}
+{"level":"warn","message":"⚠️ HuggingFace API 测试失败，将使用备用TF-IDF算法","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:48"}
+{"level":"warn","message":"错误详情: connect ETIMEDOUT 128.242.245.125:443","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:48"}
+{"level":"info","message":"📥 从MongoDB加载向量数据...","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:48"}
+{"level":"info","message":"✅ 成功加载 2 个文档，6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:48"}
+{"level":"info","message":"✅ 增强版RAG服务初始化完成","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:48"}
+{"level":"info","message":"📊 向量化方案: TF-IDF算法","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:48"}
+{"level":"info","message":"📏 向量维度: 100","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:48"}
+{"level":"info","message":"📦 已加载 6 个向量，2 个文档","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:55:48"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"OSPF\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:14"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:14"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:14"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:14"}
+{"level":"info","message":"   • 语义候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:14"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:14"}
+{"level":"info","message":"   • RRF融合后: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:14"}
+{"level":"info","message":"   • 最终返回: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:14"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"OSPF\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:16"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:16"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:16"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:16"}
+{"level":"info","message":"   • 语义候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:16"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:16"}
+{"level":"info","message":"   • RRF融合后: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:16"}
+{"level":"info","message":"   • 最终返回: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:16"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"AIS\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:21"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:21"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:21"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:21"}
+{"level":"info","message":"   • 语义候选: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:21"}
+{"level":"info","message":"   • BM25候选: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:21"}
+{"level":"info","message":"   • RRF融合后: 4 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:21"}
+{"level":"info","message":"   • 最终返回: 4 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:21"}
+{"level":"info","message":"🎯 最高RRF分数: 0.0164","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:21"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"向量索引\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:26"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:26"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:26"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:26"}
+{"level":"info","message":"   • 语义候选: 1 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:26"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:26"}
+{"level":"info","message":"   • RRF融合后: 1 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:26"}
+{"level":"info","message":"   • 最终返回: 1 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:26"}
+{"level":"info","message":"🎯 最高RRF分数: 0.0164","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:26"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"向量索引\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:28"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:28"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:28"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:28"}
+{"level":"info","message":"   • 语义候选: 1 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:28"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:28"}
+{"level":"info","message":"   • RRF融合后: 1 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:28"}
+{"level":"info","message":"   • 最终返回: 1 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:28"}
+{"level":"info","message":"🎯 最高RRF分数: 0.0164","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:28"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"自动索引\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:31"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:31"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:31"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:31"}
+{"level":"info","message":"   • 语义候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:31"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:31"}
+{"level":"info","message":"   • RRF融合后: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:31"}
+{"level":"info","message":"   • 最终返回: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:31"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"自动索引\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:33"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:33"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:33"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:33"}
+{"level":"info","message":"   • 语义候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:33"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:33"}
+{"level":"info","message":"   • RRF融合后: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:33"}
+{"level":"info","message":"   • 最终返回: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:56:33"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"当前卫星网络拥塞控制方案的不足\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:57:07"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:57:07"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:57:07"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:57:07"}
+{"level":"info","message":"   • 语义候选: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:57:07"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:57:07"}
+{"level":"info","message":"   • RRF融合后: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:57:07"}
+{"level":"info","message":"   • 最终返回: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:57:07"}
+{"level":"info","message":"🎯 最高RRF分数: 0.0164","service":"intelligent-learning-backend","timestamp":"2025-08-12 10:57:07"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"自动索引\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 11:00:07"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 11:00:07"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 11:00:07"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 11:00:07"}
+{"level":"info","message":"   • 语义候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 11:00:07"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 11:00:07"}
+{"level":"info","message":"   • RRF融合后: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 11:00:07"}
+{"level":"info","message":"   • 最终返回: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 11:00:07"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"卫星\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 11:02:07"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 11:02:07"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 11:02:07"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 11:02:07"}
+{"level":"info","message":"   • 语义候选: 3 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 11:02:07"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 11:02:07"}
+{"level":"info","message":"   • RRF融合后: 3 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 11:02:07"}
+{"level":"info","message":"   • 最终返回: 3 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 11:02:07"}
+{"level":"info","message":"🎯 最高RRF分数: 0.0164","service":"intelligent-learning-backend","timestamp":"2025-08-12 11:02:07"}
+{"level":"info","message":"🚀 初始化增强版RAG服务...","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:41:29"}
+{"0":"c","1":"o","10":"I","11":"M","12":"E","13":"D","14":"O","15":"U","16":"T","17":" ","18":"2","19":"0","2":"n","20":"8","21":".","22":"4","23":"3","24":".","25":"1","26":"7","27":"0","28":".","29":"2","3":"n","30":"3","31":"1","32":":","33":"4","34":"4","35":"3","4":"e","5":"c","6":"t","7":" ","8":"E","9":"T","level":"error","message":"HuggingFace API调用失败:","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:41:51"}
+{"level":"warn","message":"⚠️ HuggingFace API 测试失败，将使用备用TF-IDF算法","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:41:51"}
+{"level":"warn","message":"错误详情: connect ETIMEDOUT 208.43.170.231:443","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:41:51"}
+{"level":"info","message":"📥 从MongoDB加载向量数据...","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:41:51"}
+{"level":"info","message":"✅ 成功加载 2 个文档，6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:41:51"}
+{"level":"info","message":"✅ 增强版RAG服务初始化完成","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:41:51"}
+{"level":"info","message":"📊 向量化方案: TF-IDF算法","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:41:51"}
+{"level":"info","message":"📏 向量维度: 100","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:41:51"}
+{"level":"info","message":"📦 已加载 6 个向量，2 个文档","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:41:51"}
+{"level":"info","message":"💾 已从数据库删除文档: ebd4d090-dad2-4145-a52d-f28acfbd88d5","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:44:52"}
+{"level":"info","message":"🗑️ 文档 ebd4d090-dad2-4145-a52d-f28acfbd88d5 已删除 (0 个向量块)","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:44:52"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"什么是AIS-CCR？\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:48:43"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:48:43"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:48:43"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:48:43"}
+{"level":"info","message":"   • 语义候选: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:48:43"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:48:43"}
+{"level":"info","message":"   • RRF融合后: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:48:43"}
+{"level":"info","message":"   • 最终返回: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:48:43"}
+{"level":"info","message":"🎯 最高RRF分数: 0.0164","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:48:43"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"卫星\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:50:18"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:50:18"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:50:18"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:50:18"}
+{"level":"info","message":"   • 语义候选: 3 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:50:18"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:50:18"}
+{"level":"info","message":"   • RRF融合后: 3 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:50:18"}
+{"level":"info","message":"   • 最终返回: 3 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:50:18"}
+{"level":"info","message":"🎯 最高RRF分数: 0.0164","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:50:18"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"什么是AIS-CCR算法？\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:50:40"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:50:40"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:50:40"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:50:40"}
+{"level":"info","message":"   • 语义候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:50:40"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:50:40"}
+{"level":"info","message":"   • RRF融合后: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:50:40"}
+{"level":"info","message":"   • 最终返回: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:50:40"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"当前卫星网络拥塞控制方案主要存在以下不足\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:53:34"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:53:34"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:53:34"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:53:34"}
+{"level":"info","message":"   • 语义候选: 1 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:53:34"}
+{"level":"info","message":"   • BM25候选: 1 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:53:34"}
+{"level":"info","message":"   • RRF融合后: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:53:34"}
+{"level":"info","message":"   • 最终返回: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:53:34"}
+{"level":"info","message":"🎯 最高RRF分数: 0.0164","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:53:34"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"卫星\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:59:52"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:59:52"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:59:52"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:59:52"}
+{"level":"info","message":"   • 语义候选: 3 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:59:52"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:59:52"}
+{"level":"info","message":"   • RRF融合后: 3 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:59:52"}
+{"level":"info","message":"   • 最终返回: 3 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:59:52"}
+{"level":"info","message":"🎯 最高RRF分数: 0.0164","service":"intelligent-learning-backend","timestamp":"2025-08-12 15:59:52"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"智能算法在卫星网络拥塞控制中的应用有哪些？\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:00:36"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:00:36"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:00:36"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:00:36"}
+{"level":"info","message":"   • 语义候选: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:00:36"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:00:36"}
+{"level":"info","message":"   • RRF融合后: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:00:36"}
+{"level":"info","message":"   • 最终返回: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:00:36"}
+{"level":"info","message":"🎯 最高RRF分数: 0.0164","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:00:36"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"什么是AIS-CCR算法？\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:05:49"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:05:49"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:05:49"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:05:49"}
+{"level":"info","message":"   • 语义候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:05:49"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:05:49"}
+{"level":"info","message":"   • RRF融合后: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:05:49"}
+{"level":"info","message":"   • 最终返回: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:05:49"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"卫星\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:08:04"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:08:04"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:08:04"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:08:04"}
+{"level":"info","message":"   • 语义候选: 3 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:08:04"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:08:04"}
+{"level":"info","message":"   • RRF融合后: 3 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:08:04"}
+{"level":"info","message":"   • 最终返回: 3 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:08:04"}
+{"level":"info","message":"🎯 最高RRF分数: 0.0164","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:08:04"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"AIS-CCR的创新点有什么？\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:09:43"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:09:43"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:09:43"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:09:43"}
+{"level":"info","message":"   • 语义候选: 1 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:09:43"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:09:43"}
+{"level":"info","message":"   • RRF融合后: 1 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:09:43"}
+{"level":"info","message":"   • 最终返回: 1 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:09:43"}
+{"level":"info","message":"🎯 最高RRF分数: 0.0164","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:09:43"}
+{"level":"info","message":"🚀 初始化增强版RAG服务...","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:25:12"}
+{"0":"c","1":"o","10":"I","11":"M","12":"E","13":"D","14":"O","15":"U","16":"T","17":" ","18":"1","19":"0","2":"n","20":"8","21":".","22":"1","23":"6","24":"0","25":".","26":"1","27":"7","28":"0","29":".","3":"n","30":"4","31":"3","32":":","33":"4","34":"4","35":"3","4":"e","5":"c","6":"t","7":" ","8":"E","9":"T","level":"error","message":"HuggingFace API调用失败:","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:25:33"}
+{"level":"warn","message":"⚠️ HuggingFace API 测试失败，将使用备用TF-IDF算法","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:25:33"}
+{"level":"warn","message":"错误详情: connect ETIMEDOUT 108.160.170.43:443","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:25:33"}
+{"level":"info","message":"📥 从MongoDB加载向量数据...","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:25:33"}
+{"level":"info","message":"✅ 成功加载 2 个文档，6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:25:33"}
+{"level":"info","message":"✅ 增强版RAG服务初始化完成","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:25:33"}
+{"level":"info","message":"📊 向量化方案: TF-IDF算法","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:25:33"}
+{"level":"info","message":"📏 向量维度: 100","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:25:33"}
+{"level":"info","message":"📦 已加载 6 个向量，2 个文档","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:25:33"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"卫星\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:33:24"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:33:24"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:33:24"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:33:24"}
+{"level":"info","message":"   • 语义候选: 3 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:33:24"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:33:24"}
+{"level":"info","message":"   • RRF融合后: 3 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:33:24"}
+{"level":"info","message":"   • 最终返回: 3 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:33:24"}
+{"level":"info","message":"🎯 最高RRF分数: 0.0164","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:33:24"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"路由算法\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:25"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:25"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:25"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:25"}
+{"level":"info","message":"   • 语义候选: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:25"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:25"}
+{"level":"info","message":"   • RRF融合后: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:25"}
+{"level":"info","message":"   • 最终返回: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:25"}
+{"level":"info","message":"🎯 最高RRF分数: 0.0164","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:25"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"路由算法\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:28"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:28"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:28"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:28"}
+{"level":"info","message":"   • 语义候选: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:28"}
+{"level":"info","message":"   • BM25候选: 0 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:28"}
+{"level":"info","message":"   • RRF融合后: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:28"}
+{"level":"info","message":"   • 最终返回: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:28"}
+{"level":"info","message":"🎯 最高RRF分数: 0.0164","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:28"}
+{"level":"info","message":"🔍 执行增强混合搜索: \"AIS-CCR\"","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:36"}
+{"level":"info","message":"📊 搜索范围: 6 个向量块","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:36"}
+{"level":"info","message":"🧠 向量化方法: TF-IDF","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:36"}
+{"level":"info","message":"✅ 增强搜索完成:","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:36"}
+{"level":"info","message":"   • 语义候选: 3 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:36"}
+{"level":"info","message":"   • BM25候选: 2 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:36"}
+{"level":"info","message":"   • RRF融合后: 4 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:36"}
+{"level":"info","message":"   • 最终返回: 4 个","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:36"}
+{"level":"info","message":"🎯 最高RRF分数: 0.0323","service":"intelligent-learning-backend","timestamp":"2025-08-12 16:37:36"}

@@ -1,31 +1,9 @@
 <template>
   <div class="knowledge-base">
-    <div class="page-header">
+    <!-- <div class="page-header">
       <h2>📚 个人知识库</h2>
       <p>管理你的学习笔记，支持语义搜索</p>
-    </div>
-
-    <!-- 统计概览 -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-value">{{ stats.total_notes }}</div>
-        <div class="stat-label">总笔记数</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value">{{ stats.recent_notes_count }}</div>
-        <div class="stat-label">最近7天</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value">{{ stats.popular_tags.length }}</div>
-        <div class="stat-label">热门标签</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value">
-          <span :class="['status-dot', stats.database_status]"></span>
-        </div>
-        <div class="stat-label">{{ getDatabaseStatusText() }}</div>
-      </div>
-    </div>
+    </div> -->
 
     <!-- 语义搜索 -->
     <div class="search-section">
@@ -86,8 +64,26 @@
 
       <div v-if="recentNotes.length > 0" class="notes-list">
         <div v-for="note in recentNotes" :key="note.id" class="note-item">
-          <h4>{{ note.title }}</h4>
-          <p class="note-preview">{{ note.preview }}</p>
+          <div class="note-header">
+            <h4>{{ note.title }}</h4>
+            <div class="note-actions">
+              <button @click="toggleNoteExpand(note)" class="action-btn expand">
+                {{ note.expanded ? '收起' : '展开' }}
+              </button>
+              <button @click="editNote(note)" class="action-btn edit">
+                编辑
+              </button>
+              <button @click="deleteNote(note.id)" class="action-btn delete">
+                删除
+              </button>
+            </div>
+          </div>
+          
+          <div class="note-content-area">
+            <p v-if="!note.expanded" class="note-preview">{{ note.preview }}</p>
+            <div v-else class="note-full-content">{{ note.content }}</div>
+          </div>
+          
           <div class="note-footer">
             <div class="note-tags">
               <span v-for="tag in note.tags" :key="tag" class="tag">
@@ -194,6 +190,33 @@ const getDatabaseStatusText = () => {
   }
 };
 
+// 切换笔记展开状态
+const toggleNoteExpand = (note) => {
+  note.expanded = !note.expanded;
+};
+
+// 编辑笔记
+const editNote = (note) => {
+  // 这里可以打开编辑对话框或跳转到编辑页面
+  alert(`编辑笔记: ${note.title}`);
+};
+
+// 删除笔记
+const deleteNote = async (noteId) => {
+  if (!confirm('确定要删除这条笔记吗？')) return;
+  
+  try {
+    // 调用API删除笔记
+    await api.deleteNote(noteId);
+    // 重新加载笔记列表
+    await loadRecentNotes();
+    alert('笔记已删除');
+  } catch (error) {
+    console.error('删除失败:', error);
+    alert('删除失败');
+  }
+};
+
 // 格式化日期
 const formatDate = (dateString) => {
   if (!dateString) return '未知时间';
@@ -215,6 +238,8 @@ onMounted(() => {
 <style scoped>
 .knowledge-base {
   padding: 0;
+  max-width: 1400px;
+  margin: 15px;
 }
 
 .page-header {
@@ -468,6 +493,64 @@ onMounted(() => {
   color: #4a5568;
   font-size: 0.875rem;
   margin-bottom: 0.75rem;
+}
+
+.note-full-content {
+  color: #4a5568;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  background: #f7fafc;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.note-content-area {
+  margin-bottom: 0.75rem;
+}
+
+.note-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.action-btn {
+  padding: 0.25rem 0.75rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.action-btn.expand {
+  background: #edf2f7;
+  color: #4a5568;
+}
+
+.action-btn.expand:hover {
+  background: #667eea;
+  color: white;
+}
+
+.action-btn.edit {
+  background: #4299e1;
+  color: white;
+}
+
+.action-btn.edit:hover {
+  background: #3182ce;
+}
+
+.action-btn.delete {
+  background: #fc8181;
+  color: white;
+}
+
+.action-btn.delete:hover {
+  background: #f56565;
 }
 
 .note-footer {

@@ -1,97 +1,190 @@
-import axios from "axios";
+// src/config/api.js - 前端API配置文件
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
-// 创建axios实例
-const apiClient = axios.create({
-  baseURL: "http://localhost:8000/api", // Node.js后端地址
-  timeout: 600000,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-// 请求拦截器
-apiClient.interceptors.request.use(
-  (config) => {
-    console.log(`📡 API请求: ${config.method?.toUpperCase()} ${config.url}`);
-    return config;
-  },
-  (error) => {
-    console.error("❌ 请求失败:", error);
-    return Promise.reject(error);
+class APIService {
+  constructor() {
+    this.baseUrl = API_BASE_URL;
+    console.log("🔗 API Base URL:", this.baseUrl);
   }
-);
 
-// 响应拦截器
-apiClient.interceptors.response.use(
-  (response) => {
-    console.log(`✅ API响应: ${response.status}`);
-    return response.data;
-  },
-  (error) => {
-    const errorMsg = error.response?.data?.error || error.message || "网络错误";
-    console.error("❌ API错误:", errorMsg);
-    return Promise.reject(new Error(errorMsg));
+  // 统一的请求方法
+  async request(endpoint, options = {}) {
+    const url = `${this.baseUrl}${endpoint}`;
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        ...options.headers,
+      },
+      ...options,
+    };
+
+    if (config.body && typeof config.body === "object") {
+      config.body = JSON.stringify(config.body);
+    }
+
+    try {
+      console.log(`📡 API请求: ${config.method || "GET"} ${endpoint}`);
+
+      const response = await fetch(url, config);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || `HTTP ${response.status}: ${response.statusText}`
+        );
+      }
+
+      const data = await response.json();
+      console.log(`✅ API响应: ${endpoint} - 成功`);
+      return data;
+    } catch (error) {
+      console.error(`❌ API错误: ${endpoint} -`, error.message);
+      throw error;
+    }
   }
-);
 
-// API方法
-export const api = {
-  // 健康检查
+  // ============ 健康检查 ============
   async healthCheck() {
-    return apiClient.get("/health");
-  },
+    return this.request("/api/health");
+  }
 
-  // 智能问答
-  async askQuestion(question, useRag = true, currentContent = "") {
-    return apiClient.post("/chat/ask", {
-      question,
-      use_rag: useRag,
-      current_content: currentContent,
+  // ============ 智能问答 ============
+  async askQuestion(question, useRAG = true, currentContent = "") {
+    return this.request("/api/chat/ask", {
+      method: "POST",
+      body: {
+        question,
+        use_rag: useRAG,
+        current_content: currentContent,
+      },
     });
-  },
+  }
 
-  // 生成摘要
+  // ============ 内容处理 ============
   async generateSummary(content) {
-    return apiClient.post("/chat/summary", { content });
-  },
-
-  // 生成笔记
-  async generateNotes(content, title = "", autoSave = true) {
-    return apiClient.post("/chat/generate-notes", {
-      content,
-      title,
-      auto_save: autoSave,
+    return this.request("/api/chat/summary", {
+      method: "POST",
+      body: { content },
     });
-  },
+  }
 
-  // 语义搜索
-  async searchNotes(query) {
-    return apiClient.post("/notes/search", { query });
-  },
+  async generateNotes(content, title = "", tags = []) {
+    return this.request("/api/chat/generate-notes", {
+      method: "POST",
+      body: {
+        content,
+        title,
+        tags,
+        auto_save: true, // 默认自动保存
+      },
+    });
+  }
 
-  // 获取最近笔记
-  async getRecentNotes() {
-    return apiClient.get("/notes/recent");
-  },
+  // ============ 知识库管理 ============
+  async searchNotes(query, nResults = 5, minSimilarity = 0.6) {
+    return this.request("/api/notes/search", {
+      method: "POST",
+      body: {
+        query,
+        n_results: nResults,
+        min_similarity: minSimilarity,
+      },
+    });
+  }
 
-  // 获取统计
+  async getRecentNotes(days = 7) {
+    return this.request(`/api/notes/recent?days=${days}`);
+  }
+
   async getStats() {
-    return apiClient.get("/notes/stats");
-  },
+    return this.request("/api/notes/stats");
+  }
 
-  // 创建笔记
-  async createNote(title, content, tags = []) {
-    return apiClient.post("/notes/create", {
-      title,
-      content,
-      tags,
+  async createNote(noteData) {
+    return this.request("/api/notes/create", {
+      method: "POST",
+      body: noteData,
     });
-  },
+  }
 
-  // 获取演示信息
+  async deleteNote(noteId) {
+    return this.request(`/api/notes/delete/${noteId}`, {
+      method: "DELETE",
+    });
+  }
+
+  async updateNote(noteId, noteData) {
+    return this.request(`/api/notes/update/${noteId}`, {
+      method: "PUT",
+      body: noteData,
+    });
+  }
+
+  // ============ RAG Pipeline ============
+  async processWithRAG(content, title = "") {
+    return this.request("/api/rag/process", {
+      method: "POST",
+      body: {
+        content,
+        title,
+      },
+    });
+  }
+
+  async queryWithRAG(question) {
+    return this.request("/api/rag/query", {
+      method: "POST",
+      body: { question },
+    });
+  }
+
+  async getRagStatus() {
+    return this.request("/api/rag/status");
+  }
+
+  // ============ 内容提取 ============
+  async extractFromUrl(url) {
+    return this.request("/api/content/extract-from-url", {
+      method: "POST",
+      body: {
+        url,
+        extract_text: true,
+      },
+    });
+  }
+
+  // ============ 学习分析 ============
+  async analyzeLearning() {
+    return this.request("/api/chat/analyze");
+  }
+
+  // ============ 演示信息 ============
   async getDemoInfo() {
-    return apiClient.get("/demo-info");
-  },
-};
+    return this.request("/api/demo-info");
+  }
+}
 
+// 创建并导出API服务实例
+const api = new APIService();
 export default api;
+
+// 为了兼容性，也导出各个方法
+export const {
+  healthCheck,
+  askQuestion,
+  generateSummary,
+  generateNotes,
+  searchNotes,
+  getRecentNotes,
+  getStats,
+  createNote,
+  updateNote,
+  deleteNote,
+  processWithRAG,
+  queryWithRAG,
+  getRagStatus,
+  extractFromUrl,
+  analyzeLearning,
+  getDemoInfo,
+} = api;

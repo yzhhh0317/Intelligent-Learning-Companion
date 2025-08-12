@@ -1,9 +1,9 @@
 <template>
   <div class="content-input">
-    <div class="page-header">
+    <!-- <div class="page-header">
       <h2>📝 智能内容处理</h2>
       <p>粘贴学习内容，让AI帮你生成摘要和结构化笔记</p>
-    </div>
+    </div> -->
 
     <!-- 输入区域 -->
     <div class="input-section">
@@ -67,7 +67,16 @@
       </div>
       
       <div class="result-content">
-        <pre>{{ result }}</pre>
+        <pre v-if="!resultExpanded">{{ result.substring(0, 500) }}{{ result.length > 500 ? '...' : '' }}</pre>
+        <pre v-else>{{ result }}</pre>
+      </div>
+      
+      <div class="result-actions">
+        <button v-if="result.length > 500" 
+                @click="resultExpanded = !resultExpanded" 
+                class="expand-btn">
+          {{ resultExpanded ? '收起' : '查看全部' }}
+        </button>
       </div>
       
       <div v-if="savedId" class="save-success">
@@ -95,6 +104,7 @@ const resultType = ref('');
 const compressionRatio = ref(null);
 const savedId = ref('');
 const isProcessing = ref(false);
+const resultExpanded = ref(false);
 
 // 计算属性
 const wordCount = computed(() => {
@@ -108,6 +118,7 @@ const generateSummary = async () => {
   isProcessing.value = true;
   result.value = '';
   savedId.value = '';
+  resultExpanded.value = false;
   
   try {
     const response = await api.generateSummary(content.value);
@@ -128,6 +139,7 @@ const generateNotes = async () => {
   isProcessing.value = true;
   result.value = '';
   savedId.value = '';
+  resultExpanded.value = false;
   
   try {
     const response = await api.generateNotes(content.value, title.value);
@@ -153,12 +165,15 @@ const clearContent = () => {
   resultType.value = '';
   compressionRatio.value = null;
   savedId.value = '';
+  resultExpanded.value = false;
 };
 </script>
 
 <style scoped>
 .content-input {
   position: relative;
+  max-width: 1400px;
+  margin: 15px;
 }
 
 .page-header {
@@ -342,6 +357,27 @@ const clearContent = () => {
   border-radius: 6px;
   font-size: 0.875rem;
   font-weight: 500;
+}
+
+.result-actions {
+  margin-top: 1rem;
+}
+
+.expand-btn {
+  padding: 0.5rem 1rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.expand-btn:hover {
+  background: #5a67d8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
 }
 
 .loading-overlay {

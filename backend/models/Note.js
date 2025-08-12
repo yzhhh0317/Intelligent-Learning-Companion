@@ -63,6 +63,18 @@ const noteSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    chunks: [
+      {
+        chunk_id: String,
+        content: String,
+        vector: [Number],
+        chunk_index: Number,
+        created_at: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
     statistics: {
       word_count: {
         type: Number,
@@ -75,6 +87,10 @@ const noteSchema = new mongoose.Schema(
       view_count: {
         type: Number,
         default: 0,
+      },
+      vector_data: {
+        type: [Number], // 向量数组
+        default: null,
       },
       search_hits: {
         type: Number,

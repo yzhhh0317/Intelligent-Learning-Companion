@@ -1,75 +1,102 @@
 <template>
-  <div id="app">
-    <!-- 头部 -->
-    <header class="app-header">
-      <div class="header-content">
-        <div class="logo-section">
+  <div id="app" class="app-container">
+    <!-- 侧边栏 -->
+    <aside class="sidebar" :class="{ 'sidebar-collapsed': sidebarCollapsed }">
+      <!-- 侧边栏头部 -->
+      <div class="sidebar-header">
+        <div class="logo-section" v-if="!sidebarCollapsed">
           <span class="logo">🧠</span>
-          <div>
-            <h1>智能学习伴侣</h1>
-            <p class="subtitle">基于RAG的个性化学习助手</p>
+          <div class="app-info">
+            <h2>智能学习伴侣</h2>
+            <p class="subtitle">RAG增强学习助手</p>
           </div>
         </div>
+        <span class="logo-only" v-else>🧠</span>
         
-        <div class="status-section">
-          <div class="status-indicator">
-            <span :class="['status-dot', statusClass]"></span>
-            <span class="status-text">{{ statusText }}</span>
-          </div>
-          <button @click="checkHealth" class="refresh-btn" title="刷新状态">
-            🔄
-          </button>
-        </div>
-      </div>
-    </header>
-
-    <!-- 主内容区 -->
-    <main class="app-main">
-      <!-- API离线提示 -->
-      <div v-if="!isOnline" class="warning-box">
-        <span class="warning-icon">⚠️</span>
-        <div>
-          <h3>后端服务连接中...</h3>
-          <p>请确保后端服务已启动: <code>cd backend && npm start</code></p>
-        </div>
-      </div>
-
-      <!-- 标签页导航 -->
-      <div class="tab-nav">
-        <button 
-          v-for="tab in tabs" 
-          :key="tab.id"
-          @click="currentTab = tab.id"
-          :class="['tab-btn', { active: currentTab === tab.id }]"
-        >
-          {{ tab.icon }} {{ tab.name }}
+        <!-- 折叠按钮 -->
+        <button @click="toggleSidebar" class="collapse-btn" :title="sidebarCollapsed ? '展开侧边栏' : '折叠侧边栏'">
+          <span v-if="sidebarCollapsed">→</span>
+          <span v-else>←</span>
         </button>
       </div>
 
-      <!-- 标签页内容 -->
-      <div class="tab-content">
+      <!-- 导航菜单 -->
+      <nav class="sidebar-nav">
+        <div 
+          v-for="tab in tabs" 
+          :key="tab.id"
+          @click="currentTab = tab.id"
+          :class="['nav-item', { active: currentTab === tab.id }]"
+          :title="sidebarCollapsed ? tab.name : ''"
+        >
+          <span class="nav-icon">{{ tab.icon }}</span>
+          <span v-if="!sidebarCollapsed" class="nav-text">{{ tab.name }}</span>
+          <div v-if="currentTab === tab.id" class="active-indicator"></div>
+        </div>
+      </nav>
+
+      <!-- 状态指示器 -->
+      <div class="sidebar-status" v-if="!sidebarCollapsed">
+        <div class="status-item">
+          <span :class="['status-dot', statusClass]"></span>
+          <span class="status-text">{{ statusText }}</span>
+        </div>
+        <button @click="checkHealth" class="status-refresh" title="刷新状态">
+          🔄
+        </button>
+      </div>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="main-content" :class="{ 'main-expanded': sidebarCollapsed }">
+      <!-- API离线提示 -->
+      <div v-if="!isOnline" class="warning-banner">
+        <span class="warning-icon">⚠️</span>
+        <div>
+          <strong>后端服务连接中...</strong>
+          <p>请确保后端服务已启动</p>
+        </div>
+      </div>
+
+      <!-- 内容区域 -->
+      <div class="content-area">
         <!-- 内容处理页 -->
         <div v-show="currentTab === 'input'" class="tab-panel">
+          <div class="page-header">
+            <h1>📝 内容处理</h1>
+            <p>智能处理学习内容，生成摘要和结构化笔记</p>
+          </div>
           <ContentInput />
         </div>
 
         <!-- 智能问答页 -->
         <div v-show="currentTab === 'chat'" class="tab-panel">
+          <div class="page-header">
+            <h1>🤖 智能问答</h1>
+            <p>基于个人知识库的智能问答系统</p>
+          </div>
           <ChatInterface />
         </div>
 
         <!-- 知识库页 -->
         <div v-show="currentTab === 'knowledge'" class="tab-panel">
+          <div class="page-header">
+            <h1>📚 知识库</h1>
+            <p>管理和搜索你的学习笔记</p>
+          </div>
           <KnowledgeBase />
+        </div>
+
+        <!-- RAG控制台页 -->
+        <div v-show="currentTab === 'rag'" class="tab-panel">
+          <div class="page-header">
+            <h1>🚀 RAG控制台</h1>
+            <p>检索增强生成技术演示平台</p>
+          </div>
+          <RAGConsole />
         </div>
       </div>
     </main>
-
-    <!-- 页脚 -->
-    <footer class="app-footer">
-      <p>🚀 智能学习伴侣 - 基于RAG技术的个性化学习助手</p>
-      <p>前端: Vue 3 | 后端: Node.js + Express + DeepSeek</p>
-    </footer>
   </div>
 </template>
 
@@ -79,9 +106,11 @@ import api from './config/api';
 import ContentInput from './components/ContentInput.vue';
 import ChatInterface from './components/ChatInterface.vue';
 import KnowledgeBase from './components/KnowledgeBase.vue';
+import RAGConsole from './components/RAGConsole.vue';
 
-// 状态
+// 状态管理
 const currentTab = ref('input');
+const sidebarCollapsed = ref(false);
 const isOnline = ref(false);
 const apiStatus = ref('checking');
 
@@ -89,11 +118,12 @@ const apiStatus = ref('checking');
 const tabs = [
   { id: 'input', name: '内容处理', icon: '📝' },
   { id: 'chat', name: '智能问答', icon: '🤖' },
-  { id: 'knowledge', name: '知识库', icon: '📚' }
+  { id: 'knowledge', name: '知识库', icon: '📚' },
+  { id: 'rag', name: 'RAG控制台', icon: '🚀' }
 ];
 
-// 计算属性
-const statusClass = ref('');
+// 状态显示
+const statusClass = ref('checking');
 const statusText = ref('检查中...');
 
 // 更新状态显示
@@ -108,6 +138,13 @@ const updateStatus = () => {
     statusClass.value = 'checking';
     statusText.value = '检查中...';
   }
+};
+
+// 切换侧边栏
+const toggleSidebar = () => {
+  sidebarCollapsed.value = !sidebarCollapsed.value;
+  // 保存用户偏好
+  localStorage.setItem('sidebarCollapsed', sidebarCollapsed.value);
 };
 
 // 检查健康状态
@@ -135,49 +172,72 @@ const checkHealth = async () => {
 
 // 初始化
 onMounted(() => {
+  // 恢复用户偏好
+  const savedCollapsed = localStorage.getItem('sidebarCollapsed');
+  if (savedCollapsed === 'true') {
+    sidebarCollapsed.value = true;
+  }
+  
+  // 恢复上次的标签页
+  const savedTab = localStorage.getItem('currentTab');
+  if (savedTab && tabs.some(tab => tab.id === savedTab)) {
+    currentTab.value = savedTab;
+  }
+  
   checkHealth();
   // 每30秒检查一次
-  setInterval(checkHealth, 600000);
+  setInterval(checkHealth, 30000);
+});
+
+// 监听标签页变化，保存用户偏好
+import { watch } from 'vue';
+watch(currentTab, (newTab) => {
+  localStorage.setItem('currentTab', newTab);
 });
 </script>
 
-<style>
-/* 全局样式 */
+<style scoped>
+/* 全局重置 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
+/* 应用容器 */
+.app-container {
+  display: flex;
+  height: 100vh;
+  background: #f5f7fa;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  line-height: 1.6;
-  color: #333;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
 }
 
-#app {
-  min-height: 100vh;
+/* 侧边栏样式 */
+.sidebar {
+  width: 250px;
+  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+  color: white;
   display: flex;
   flex-direction: column;
-  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease;
+  position: relative;
+  z-index: 100;
 }
 
-/* 头部样式 */
-.app-header {
-  background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid #e0e0e0;
+.sidebar-collapsed {
+  width: 70px;
 }
 
-.header-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem 2rem;
+/* 侧边栏头部 */
+.sidebar-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  min-height: 100px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
 }
 
 .logo-section {
@@ -186,31 +246,118 @@ body {
   gap: 1rem;
 }
 
-.logo {
+.logo, .logo-only {
   font-size: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: rgba(255, 255, 255, 0.2);
   padding: 0.5rem;
-  border-radius: 10px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
 }
 
-.logo-section h1 {
-  font-size: 1.5rem;
-  color: #333;
+.app-info h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
 }
 
 .subtitle {
-  font-size: 0.875rem;
-  color: #666;
-  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  opacity: 0.8;
 }
 
-.status-section {
+.collapse-btn {
+  position: absolute;
+  top: 50%;
+  right: -15px;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: white;
+  border: none;
+  color: #667eea;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: center;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 101;
 }
 
-.status-indicator {
+.collapse-btn:hover {
+  background: #f0f0f0;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* 导航菜单 */
+.sidebar-nav {
+  flex: 1;
+  padding: 1rem 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  margin: 0 0.5rem;
+  border-radius: 12px;
+}
+
+.sidebar-collapsed .nav-item {
+  justify-content: center;
+  padding: 1rem;
+  margin: 0.5rem;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.nav-item.active {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.nav-icon {
+  font-size: 1.5rem;
+  min-width: 1.5rem;
+}
+
+.nav-text {
+  margin-left: 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.active-indicator {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 60%;
+  background: white;
+  border-radius: 2px 0 0 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 状态指示器 */
+.sidebar-status {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -241,140 +388,132 @@ body {
   100% { opacity: 1; }
 }
 
-.refresh-btn {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: transform 0.3s;
+.status-text {
+  font-size: 0.85rem;
+  opacity: 0.9;
 }
 
-.refresh-btn:hover {
+.status-refresh {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.status-refresh:hover {
+  background: rgba(255, 255, 255, 0.1);
   transform: rotate(180deg);
 }
 
 /* 主内容区 */
-.app-main {
+.main-content {
   flex: 1;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-left: 0;
+  transition: margin-left 0.3s ease;
 }
 
-.warning-box {
-  background: #fff3cd;
+.main-expanded {
+  margin-left: 0;
+}
+
+/* 警告横幅 */
+.warning-banner {
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
   border: 1px solid #ffc107;
-  border-radius: 8px;
+  color: #856404;
   padding: 1rem;
-  margin-bottom: 2rem;
+  margin: 1rem;
+  border-radius: 8px;
   display: flex;
   gap: 1rem;
-  align-items: start;
+  align-items: flex-start;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .warning-icon {
   font-size: 1.5rem;
 }
 
-.warning-box h3 {
-  color: #856404;
-  margin-bottom: 0.5rem;
-}
-
-.warning-box p {
-  color: #856404;
-  font-size: 0.875rem;
-}
-
-.warning-box code {
-  background: #ffeeba;
-  padding: 0.2rem 0.4rem;
-  border-radius: 4px;
-  font-family: monospace;
-}
-
-/* 标签页导航 */
-.tab-nav {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-  background: #f5f5f5;
-  padding: 0.5rem;
-  border-radius: 10px;
-}
-
-.tab-btn {
-  padding: 0.75rem 1.5rem;
-  background: transparent;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  color: #666;
-  transition: all 0.3s;
-}
-
-.tab-btn:hover {
-  background: #e0e0e0;
-}
-
-.tab-btn.active {
-  background: white;
-  color: #667eea;
-  font-weight: 500;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* 标签页内容 */
-.tab-content {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  min-height: 500px;
+/* 内容区域 */
+.content-area {
+  flex: 1;
+  overflow: auto;
+  padding: 0;
 }
 
 .tab-panel {
-  padding: 2rem;
-  animation: fadeIn 0.3s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.3s ease;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
-/* 页脚 */
-.app-footer {
-  background: #f5f5f5;
+/* 页面头部 */
+.page-header {
+  background: white;
   padding: 2rem;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   text-align: center;
-  border-top: 1px solid #e0e0e0;
 }
 
-.app-footer p {
-  color: #666;
-  font-size: 0.875rem;
-  margin: 0.25rem 0;
+.page-header h1 {
+  font-size: 2rem;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
 }
 
-/* 响应式 */
+.page-header p {
+  color: #6b7280;
+  font-size: 1.1rem;
+}
+
+/* 响应式设计 */
 @media (max-width: 768px) {
-  .header-content {
-    flex-direction: column;
-    gap: 1rem;
+  .sidebar {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
   }
   
-  .app-main {
+  .sidebar.show {
+    transform: translateX(0);
+  }
+  
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .collapse-btn {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
     padding: 1rem;
   }
   
-  .tab-nav {
-    flex-direction: column;
-  }
-  
-  .tab-btn {
-    width: 100%;
+  .page-header h1 {
+    font-size: 1.5rem;
   }
 }
 </style>
