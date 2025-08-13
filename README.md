@@ -15,7 +15,7 @@
 
 - **🔍 混合检索引擎**：语义搜索 + BM25 + RRF 融合，Top-5 召回率达 85%，准确率提升 30%+
 - **🧠 智能向量化**：支持 HuggingFace Embeddings + TF-IDF 双重方案，向量维度自动升级(100D→384D)
-- **💾 双重存储架构**：MongoDB 持久化 + 内存高速缓存，检索响应时间<150ms
+- **💾 存储架构**：MongoDB 持久化，检索响应时间<150ms
 - **🤖 AI 深度集成**：DeepSeek R1 大模型，专业 Prompt 工程，支持多角色智能生成
 - **📊 完整评估体系**：内置性能评估模块，支持召回率、精确率等多维度指标监控
 
@@ -24,7 +24,7 @@
 ### 后端技术栈
 
 - **🚀 运行时环境**：Node.js 18+ + Express.js
-- **💾 数据存储**：MongoDB + 内存向量存储
+- **💾 数据存储**：MongoDB
 - **🧠 AI 模型**：DeepSeek R1 大语言模型
 - **🔍 向量化方案**：HuggingFace sentence-transformers + 改进 TF-IDF
 - **📊 检索算法**：Reciprocal Rank Fusion (RRF, k=60)
@@ -32,7 +32,6 @@
 ### 前端技术栈
 
 - **⚡ 框架**：Vue 3 + Composition API
-- **🏪 状态管理**：Pinia
 - **🎨 样式**：原生 CSS + 响应式设计
 - **📱 交互**：模态框 + 实时更新
 
