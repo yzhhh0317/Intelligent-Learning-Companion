@@ -5,7 +5,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import mongoose from "mongoose";
 
-// 修复ES模块中的__dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -157,8 +156,6 @@ async function loadServices() {
   }
 }
 
-// ============ 增强的路由定义 ============
-
 // 健康检查（显示更多信息）
 app.get("/api/health", async (req, res) => {
   const mongoStatus =
@@ -200,6 +197,65 @@ app.get("/api/health", async (req, res) => {
       "改进的TF-IDF备用算法",
     ],
   });
+});
+
+// 清理并重建RAG索引
+app.post("/api/rag/rebuild", async (req, res) => {
+  try {
+    console.log("🧹 开始清理并重建RAG索引...");
+
+    // 1. 清空当前向量存储
+    enhancedRAG.clear();
+    console.log("✅ 已清空向量存储");
+
+    // 2. 从数据库重新加载所有笔记
+    const { default: Note } = await import("./models/Note.js");
+    const allNotes = await Note.find({ deleted: false });
+    console.log(`📚 找到 ${allNotes.length} 条笔记需要重新索引`);
+
+    // 3. 重新建立向量索引
+    let processedCount = 0;
+    let successCount = 0;
+
+    for (const note of allNotes) {
+      try {
+        processedCount++;
+        console.log(
+          `🔄 处理笔记 ${processedCount}/${allNotes.length}: ${note.title}`
+        );
+
+        // 使用现有笔记ID重新建立索引
+        await enhancedRAG.processDocument(note.content, note.title, note.id);
+        successCount++;
+      } catch (error) {
+        console.error(`❌ 处理笔记失败: ${note.title}`, error.message);
+      }
+    }
+
+    const stats = enhancedRAG.getStats();
+
+    console.log("✅ RAG索引重建完成!");
+    console.log(`📊 处理统计: ${successCount}/${processedCount} 成功`);
+
+    res.json({
+      status: "success",
+      message: "RAG索引重建完成",
+      statistics: {
+        total_notes: allNotes.length,
+        processed_count: processedCount,
+        success_count: successCount,
+        failed_count: processedCount - successCount,
+        current_stats: stats,
+      },
+    });
+  } catch (error) {
+    console.error("❌ RAG索引重建失败:", error);
+    res.status(500).json({
+      status: "error",
+      message: "RAG索引重建失败",
+      error: error.message,
+    });
+  }
 });
 
 // 笔记统计（强制数据库查询）
@@ -968,6 +1024,28 @@ app.delete("/api/notes/delete/:id", async (req, res) => {
     res.status(500).json({
       status: "error",
       message: "删除笔记失败",
+      error: error.message,
+    });
+  }
+});
+
+// 性能评估
+app.post("/api/evaluation/run", async (req, res) => {
+  try {
+    const { default: evaluationService } = await import(
+      "./services/evaluation.js"
+    );
+    const report = await evaluationService.generateReport();
+
+    console.log(
+      `📊 评估完成: 综合得分 ${report.executive_summary.overallScore}`
+    );
+    res.json(report);
+  } catch (error) {
+    console.error("❌ 评估失败:", error);
+    res.status(500).json({
+      status: "error",
+      message: "性能评估失败",
       error: error.message,
     });
   }

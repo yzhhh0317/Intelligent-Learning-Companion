@@ -1,6 +1,5 @@
 // routes/rag.js - RAG专用路由
 import express from "express";
-import simpleRAG from "../services/simpleRAG.js";
 import aiService from "../services/aiService.js";
 import noteService from "../services/noteService.js";
 import logger from "../config/logger.js";
@@ -22,8 +21,9 @@ router.post("/process", async (req, res) => {
     logger.info(`📄 RAG文档处理: ${title || "未命名文档"}`);
     logger.info(`📏 内容长度: ${content.length} 字符`);
 
-    // 使用简化的RAG服务处理文档
-    const result = await simpleRAG.processDocument(
+    // 🔧 修正：使用enhancedRAG而不是simpleRAG
+    const { default: enhancedRAG } = await import("../services/enhancedRAG.js");
+    const result = await enhancedRAG.processDocument(
       content,
       title || "未命名文档"
     );
@@ -87,72 +87,59 @@ router.post("/query", async (req, res) => {
     // Step 1: Query Embedding
     const embeddingStart = Date.now();
     logger.info("⚙️ 生成查询向量...");
-    // 这里实际上在hybridSearch中会生成
     pipelineSteps.push({
       name: "Query Embedding",
       time: `${Date.now() - embeddingStart}ms`,
-      tech: "TF-IDF Vector",
+      tech: "HuggingFace/TF-IDF",
       details: "查询向量化完成",
     });
 
     // Step 2: Hybrid Search
     const searchStart = Date.now();
     logger.info("🔍 执行混合检索...");
-    const searchResults = await simpleRAG.hybridSearch(question, 5);
+
+    // 🔧 修正：使用enhancedRAG
+    const { default: enhancedRAG } = await import("../services/enhancedRAG.js");
+    const searchResults = await enhancedRAG.hybridSearch(question, 5);
+
     pipelineSteps.push({
       name: "Hybrid Search",
       time: `${Date.now() - searchStart}ms`,
-      tech: "Semantic + BM25",
+      tech: "Semantic + BM25 + RRF",
       details: `检索到 ${searchResults.length} 个相关文档`,
     });
 
     // Step 3: Context Building
     const contextStart = Date.now();
     logger.info("📝 构建上下文...");
-    const context = searchResults
-      .map(
-        (doc, i) =>
-          `[文档${i + 1}] ${
-            doc.metadata?.title || "未知标题"
-          }\n${doc.content.substring(0, 500)}`
-      )
-      .join("\n\n");
+
+    // 🔧 修复：构建用于aiService.ragAnswer的context格式
+    const contextForRag = searchResults.map((result) => ({
+      id: result.id,
+      title: result.metadata?.title || "未知标题",
+      content: result.content,
+      score: result.score,
+    }));
+
     pipelineSteps.push({
       name: "Context Building",
       time: `${Date.now() - contextStart}ms`,
-      tech: "Text Concatenation",
-      details: `上下文长度: ${context.length} 字符`,
+      tech: "Advanced Context Structure",
+      details: `构建了 ${contextForRag.length} 个高质量上下文`,
     });
 
-    // Step 4: LLM Generation
+    // Step 4: Enhanced LLM Generation with Professional Prompt
     const llmStart = Date.now();
-    logger.info("🧠 调用DeepSeek生成答案...");
+    logger.info("🧠 调用DeepSeek生成专业答案...");
 
-    const systemPrompt = `你是一个基于知识库的智能助手。请根据提供的相关文档回答用户问题。
-
-回答要求：
-1. 基于提供的文档内容回答，保证准确性
-2. 如果文档不足以回答问题，明确说明
-3. 简洁专业，重点突出
-4. 可以适当补充背景知识`;
-
-    const messages = [
-      { role: "system", content: systemPrompt },
-      {
-        role: "user",
-        content: `相关文档：\n${context}\n\n用户问题：${question}\n\n请基于上述文档回答问题。`,
-      },
-    ];
-
-    const answer = await aiService.callDeepSeek(messages, {
-      temperature: 0.7,
-      maxTokens: 2000,
-    });
+    // 🔧 修复：使用与智能问答相同的专业Prompt和逻辑
+    const response = await aiService.ragAnswer(question, contextForRag, "");
+    const answer = response.answer;
 
     pipelineSteps.push({
-      name: "LLM Generation",
+      name: "Enhanced LLM Generation",
       time: `${Date.now() - llmStart}ms`,
-      tech: "DeepSeek R1",
+      tech: "DeepSeek + Professional Prompt",
       details: `答案长度: ${answer.length} 字符`,
     });
 
@@ -174,14 +161,18 @@ router.post("/query", async (req, res) => {
         title: result.metadata?.title || `文档片段 ${index + 1}`,
         content: result.content,
         score: result.score,
-        type: result.score > 0.7 ? "semantic" : "bm25",
+        type: result.score > 0.7 ? "semantic" : "hybrid",
         chunkIndex: result.metadata?.chunkIndex || index,
       })),
       context_info: {
         documents_used: searchResults.length,
-        total_context_length: context.length,
+        total_context_length: contextForRag.reduce(
+          (sum, doc) => sum + doc.content.length,
+          0
+        ),
         has_relevant_context:
           searchResults.length > 0 && searchResults[0].score > 0.3,
+        enhancement: "使用专业Prompt工程，与智能问答相同的高质量生成逻辑",
       },
       totalTime: `${(totalTime / 1000).toFixed(2)}s`,
     });
@@ -198,12 +189,14 @@ router.post("/query", async (req, res) => {
 // RAG系统状态
 router.get("/status", async (req, res) => {
   try {
-    const stats = simpleRAG.getStats();
+    // 🔧 修正：使用enhancedRAG
+    const { default: enhancedRAG } = await import("../services/enhancedRAG.js");
+    const stats = enhancedRAG.getStats();
 
     res.json({
       status: "operational",
       initialized: stats.initialized,
-      storage_type: "memory",
+      storage_type: "memory + mongodb",
       performance: {
         total_documents: stats.totalDocuments,
         total_chunks: stats.totalChunks,
@@ -214,12 +207,13 @@ router.get("/status", async (req, res) => {
         "Semantic Search",
         "BM25 Keyword Search",
         "Hybrid Retrieval",
+        "RRF Fusion",
         "LLM Generation",
       ],
       algorithms: {
-        embedding: "TF-IDF改进算法",
+        embedding: stats.embedding_method,
         search: "语义相似度 + BM25",
-        fusion: "加权平均（待升级为RRF）",
+        fusion: "Reciprocal Rank Fusion",
         llm: "DeepSeek R1",
       },
       last_updated: new Date().toISOString(),
@@ -237,7 +231,9 @@ router.get("/status", async (req, res) => {
 // 清空RAG知识库
 router.delete("/clear", async (req, res) => {
   try {
-    simpleRAG.clear();
+    // 🔧 修正：使用enhancedRAG
+    const { default: enhancedRAG } = await import("../services/enhancedRAG.js");
+    enhancedRAG.clear();
 
     logger.info("🗑️ RAG知识库已清空");
 
@@ -261,7 +257,9 @@ router.delete("/document/:docId", async (req, res) => {
   try {
     const { docId } = req.params;
 
-    const result = simpleRAG.deleteDocument(docId);
+    // 🔧 修正：使用enhancedRAG
+    const { default: enhancedRAG } = await import("../services/enhancedRAG.js");
+    const result = enhancedRAG.deleteDocument(docId);
 
     if (result) {
       logger.info(`🗑️ 文档已删除: ${docId}`);

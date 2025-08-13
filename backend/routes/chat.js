@@ -1,6 +1,6 @@
-// routes/chat.js - 智能问答路由（重构版）
+// routes/chat.js - 智能问答路由
 import express from "express";
-import simpleRAG from "../services/simpleRAG.js";
+import enhancedRAG from "../services/enhancedRAG.js";
 import aiService from "../services/aiService.js";
 import noteService from "../services/noteService.js";
 import logger from "../config/logger.js";
@@ -32,7 +32,7 @@ router.post("/ask", async (req, res) => {
 
     // 如果启用RAG，检索相关文档
     if (use_rag) {
-      const searchResults = await simpleRAG.hybridSearch(question, 3);
+      const searchResults = await enhancedRAG.hybridSearch(question, 3);
 
       if (searchResults.length > 0) {
         context = searchResults.map((result) => ({
@@ -161,7 +161,7 @@ router.post("/generate-notes", async (req, res) => {
 
         // 索引到RAG向量数据库
         try {
-          await simpleRAG.processDocument(result.notes, result.title);
+          await enhancedRAG.processDocument(result.notes, result.title);
           ragProcessed = true;
           logger.info(`🧠 已建立向量索引: ${savedNote.id}`);
         } catch (ragError) {

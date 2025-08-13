@@ -1,7 +1,6 @@
 // routes/notes.js - 笔记管理路由
 import express from "express";
 import Note from "../models/Note.js";
-import simpleRAG from "../services/simpleRAG.js";
 import logger from "../config/logger.js";
 
 const router = express.Router();
@@ -18,22 +17,44 @@ router.post("/search", async (req, res) => {
       });
     }
 
-    const results = await ragService.semanticSearch(
-      query,
-      n_results,
-      min_similarity
-    );
+    // 🔧 修正：使用enhancedRAG而不是ragService
+    const { default: enhancedRAG } = await import("../services/enhancedRAG.js");
+    const results = await enhancedRAG.hybridSearch(query, n_results);
+
+    // 过滤结果并格式化
+    const filteredResults = results
+      .filter((result) => result.score >= min_similarity)
+      .map((result) => ({
+        id: result.id,
+        content: result.content,
+        preview:
+          result.content.substring(0, 300) +
+          (result.content.length > 300 ? "..." : ""),
+        metadata: {
+          id: result.metadata?.id || result.id,
+          title: result.metadata?.title || "未知标题",
+          tags: result.metadata?.tags || "",
+          created_at: result.metadata?.created_at || new Date().toISOString(),
+          content_length: result.content.length,
+          chunkIndex: result.metadata?.chunkIndex || 0,
+          embeddingMethod: result.metadata?.embeddingMethod || "unknown",
+        },
+        similarity: result.score,
+        match_type: result.match_type || "semantic",
+        fusion_details: result.fusion_details,
+      }));
 
     res.json({
       status: "success",
-      results,
-      total_found: results.length,
+      results: filteredResults,
+      total_found: filteredResults.length,
     });
   } catch (error) {
     logger.error("搜索失败:", error);
     res.status(500).json({
       status: "error",
       message: "搜索失败",
+      error: error.message,
     });
   }
 });
@@ -91,8 +112,16 @@ router.post("/create", async (req, res) => {
 
     await note.save();
 
-    // 索引到向量数据库
-    await ragService.indexNote(note);
+    // 🔧 修正：使用enhancedRAG建立索引
+    try {
+      const { default: enhancedRAG } = await import(
+        "../services/enhancedRAG.js"
+      );
+      await enhancedRAG.processDocument(content, title, note.id);
+      logger.info(`🧠 向量索引创建成功: ${note.id}`);
+    } catch (ragError) {
+      logger.warn(`⚠️ 向量索引失败: ${ragError.message}`);
+    }
 
     res.json({
       status: "success",
@@ -123,8 +152,16 @@ router.delete("/delete/:id", async (req, res) => {
     // 软删除
     await note.softDelete();
 
-    // 从向量数据库删除
-    await ragService.deleteIndex(id);
+    // 🔧 修正：从enhancedRAG删除索引
+    try {
+      const { default: enhancedRAG } = await import(
+        "../services/enhancedRAG.js"
+      );
+      await enhancedRAG.deleteDocument(id);
+      logger.info(`🗑️ 向量索引删除成功: ${id}`);
+    } catch (ragError) {
+      logger.warn(`⚠️ 向量索引删除失败: ${ragError.message}`);
+    }
 
     res.json({
       status: "success",
@@ -160,6 +197,30 @@ router.put("/update/:id", async (req, res) => {
       });
     }
 
+    // 🔧 修正：重新索引向量数据，使用现有笔记ID避免重复
+    try {
+      const { default: enhancedRAG } = await import(
+        "../services/enhancedRAG.js"
+      );
+
+      // 先删除旧的向量索引
+      await enhancedRAG.deleteDocument(id);
+      logger.info(`🗑️ 已删除旧的向量索引: ${id}`);
+
+      // 重新创建向量索引，传递现有笔记ID
+      const processResult = await enhancedRAG.processDocument(
+        content,
+        title,
+        id
+      );
+      logger.info(
+        `🔄 重新创建向量索引成功: ${id} (${processResult.embedding_method})`
+      );
+    } catch (ragError) {
+      logger.warn(`⚠️ 向量索引更新失败: ${ragError.message}`);
+      // 不抛出错误，允许笔记更新继续进行
+    }
+
     // 更新笔记
     note.title = title;
     note.content = content;
@@ -167,15 +228,6 @@ router.put("/update/:id", async (req, res) => {
     note.updated_at = new Date();
 
     await note.save();
-
-    // 重新索引到向量数据库（如果启用了RAG）
-    try {
-      const simpleRAG = (await import("../services/simpleRAG.js")).default;
-      await simpleRAG.processDocument(content, title);
-    } catch (ragError) {
-      logger.warn("重新索引向量失败:", ragError.message);
-    }
-
     logger.info(`📝 笔记更新成功: ${note.title} (ID: ${note.id})`);
 
     res.json({

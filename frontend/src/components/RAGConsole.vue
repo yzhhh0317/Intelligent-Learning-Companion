@@ -1,20 +1,5 @@
 <template>
   <div class="rag-console">
-    <!-- 页面标题 -->
-    <!-- <div class="console-header">
-      <h2>🚀 RAG Pipeline 控制台</h2>
-      <p>展示完整的检索增强生成技术栈</p>
-    </div> -->
-
-    <!-- 技术栈展示 -->
-    <!-- <div class="tech-stack-showcase">
-      <div class="tech-card" v-for="tech in techStack" :key="tech.name">
-        <div class="tech-icon">{{ tech.icon }}</div>
-        <div class="tech-name">{{ tech.name }}</div>
-        <div class="tech-desc">{{ tech.desc }}</div>
-      </div>
-    </div> -->
-
     <!-- Pipeline流程图 -->
     <div class="pipeline-flow">
       <h3>📊 RAG Pipeline 架构</h3>
@@ -131,6 +116,10 @@
           <!-- Pipeline执行详情（横向显示） -->
           <div class="pipeline-details">
             <h4>⚡ Pipeline执行流程</h4>
+            <!-- <div class="enhancement-notice">
+              <span class="enhancement-badge">🚀 已升级</span>
+              <span>现在使用与智能问答相同的专业Prompt工程，答案质量显著提升！</span>
+            </div> -->
             <div class="execution-steps-horizontal">
               <div v-for="(step, index) in queryResult.pipeline.steps" :key="step.name" 
                    class="exec-step-h">
@@ -143,28 +132,37 @@
             </div>
           </div>
 
-          <!-- 检索结果（过滤0%匹配度，网格显示） -->
+          <!-- 检索结果（修改为列表显示） -->
           <div class="retrieval-results" v-if="validSources.length > 0">
             <h4>📚 检索结果 ({{ validSources.length }} 个相关文档)</h4>
-            <div class="source-grid">
+            <div class="source-list">
               <div v-for="(source, index) in validSources" :key="index" 
-                   class="source-card">
+                   class="source-item">
                 <div class="source-header">
-                  <span class="source-rank">#{{ index + 1 }}</span>
-                  <span class="source-score" :style="{ background: getScoreColor(source.score) }">
-                    {{ (source.score * 100).toFixed(1) }}%
-                  </span>
+                  <div class="source-title-area">
+                    <span class="source-rank">#{{ index + 1 }}</span>
+                    <h5 class="source-title">{{ source.title || `文档片段 ${index + 1}` }}</h5>
+                  </div>
+                  <div class="source-actions">
+                    <span class="source-score" :style="{ background: getScoreColor(source.score) }">
+                      {{ (source.score * 100).toFixed(1) }}%
+                    </span>
+                    <button @click="viewSourceDetail(source, index)" class="view-detail-btn">
+                      查看全部
+                    </button>
+                  </div>
                 </div>
-                <div class="source-title">{{ source.title || `文档片段 ${index + 1}` }}</div>
+                
                 <div class="source-content-preview">
-                  <p v-if="!source.expanded">{{ source.content.substring(0, 100) }}...</p>
-                  <p v-else>{{ source.content }}</p>
+                  <p>{{ source.content.substring(0, 200) }}{{ source.content.length > 200 ? '...' : '' }}</p>
                 </div>
+                
                 <div class="source-footer">
-                  <button @click="toggleExpand(source)" class="expand-btn">
-                    {{ source.expanded ? '收起' : '查看全部' }}
-                  </button>
                   <span class="source-type">{{ source.type }}</span>
+                  <span class="source-length">{{ source.content.length }} 字符</span>
+                  <span v-if="source.chunkIndex !== undefined" class="chunk-info">
+                    第 {{ source.chunkIndex + 1 }} 个片段
+                  </span>
                 </div>
               </div>
             </div>
@@ -173,6 +171,10 @@
           <!-- 最终答案 -->
           <div class="final-answer">
             <h4>💡 生成的答案</h4>
+            <div class="answer-quality-notice">
+              <span class="quality-badge">⭐ 专业级</span>
+              <span>采用与智能问答相同的Prompt工程，确保答案质量</span>
+            </div>
             <div class="answer-content">
               <div v-if="!answerExpanded" class="answer-preview">
                 {{ queryResult.answer.substring(0, 300) }}
@@ -191,7 +193,7 @@
               <div class="answer-stats">
                 <span>🕐 总耗时: {{ queryResult.totalTime }}</span>
                 <span>📊 使用文档: {{ validSources.length }}</span>
-                <span>🧠 模型: DeepSeek</span>
+                <span>🧠 模型: DeepSeek + 专业Prompt</span>
               </div>
             </div>
           </div>
@@ -199,7 +201,7 @@
       </div>
     </div>
 
-    <!-- 简化的统计（去掉和知识库重复的部分） -->
+    <!-- 性能监控 -->
     <div class="performance-monitor">
       <h3>⚡ 性能监控</h3>
       <div class="perf-metrics">
@@ -226,6 +228,197 @@
         </div>
       </div>
     </div>
+
+    <!-- 性能评估模块 -->
+    <div class="evaluation-section">
+      <h3>📊 系统性能评估</h3>
+      <p class="eval-description">运行标准测试集，评估RAG系统的检索准确率、召回率等关键指标</p>
+      
+      <!-- 评估控制 -->
+      <div class="eval-controls">
+        <button @click="runEvaluation" 
+                :disabled="isEvaluating"
+                class="eval-btn">
+          <span v-if="!isEvaluating">🧪 运行性能评估</span>
+          <span v-else>⏳ 评估中...</span>
+        </button>
+        
+        <button @click="rebuildRagIndex" 
+                :disabled="isRebuilding"
+                class="rebuild-btn">
+          <span v-if="!isRebuilding">🧹 清理重建索引</span>
+          <span v-else>⏳ 重建中...</span>
+        </button>
+        
+        <div v-if="evaluationResult" class="eval-actions">
+          <button @click="toggleEvaluationDetails" class="details-btn">
+            {{ showEvaluationDetails ? '隐藏详情' : '查看详情' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- 评估结果 -->
+      <div v-if="evaluationResult" class="eval-results">
+        <div class="eval-summary">
+          <h4>📈 评估摘要</h4>
+          <div class="summary-grid">
+            <div class="summary-item overall">
+              <span class="summary-label">综合得分</span>
+              <span class="summary-value highlight">{{ evaluationResult.executive_summary.overallScore }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">召回率</span>
+              <span class="summary-value">{{ evaluationResult.executive_summary.keyMetrics.recallRate }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">准确率</span>
+              <span class="summary-value">{{ evaluationResult.executive_summary.keyMetrics.accuracyRate }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">混合检索提升</span>
+              <span class="summary-value success">{{ evaluationResult.executive_summary.keyMetrics.hybridImprovement }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">平均响应时间</span>
+              <span class="summary-value">{{ evaluationResult.executive_summary.keyMetrics.avgResponseTime }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">成功率</span>
+              <span class="summary-value">{{ evaluationResult.executive_summary.keyMetrics.successRate }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 优势和改进建议 -->
+        <div class="eval-insights">
+          <div v-if="evaluationResult.executive_summary.strengths.length > 0" class="insights-section">
+            <h5>✅ 系统优势</h5>
+            <ul class="insights-list">
+              <li v-for="strength in evaluationResult.executive_summary.strengths" :key="strength">
+                {{ strength }}
+              </li>
+            </ul>
+          </div>
+          
+          <div v-if="evaluationResult.executive_summary.improvements.length > 0" class="insights-section">
+            <h5>💡 改进建议</h5>
+            <ul class="insights-list">
+              <li v-for="improvement in evaluationResult.executive_summary.improvements" :key="improvement">
+                {{ improvement }}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 详细评估结果 -->
+        <div v-if="showEvaluationDetails" class="eval-details">
+          <h4>🔍 详细评估数据</h4>
+          
+          <!-- 检索性能详情 -->
+          <div class="detail-section">
+            <h5>检索性能</h5>
+            <div class="detail-grid">
+              <div class="detail-item">
+                <span class="detail-label">测试查询数</span>
+                <span class="detail-value">{{ evaluationResult.detailed_metrics.retrieval?.totalQueries || 0 }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">平均F1分数</span>
+                <span class="detail-value">{{ ((evaluationResult.detailed_metrics.retrieval?.avgF1Score || 0) * 100).toFixed(1) }}%</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">平均检索时间</span>
+                <span class="detail-value">{{ (evaluationResult.detailed_metrics.retrieval?.avgResponseTime || 0).toFixed(0) }}ms</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 生成质量详情 -->
+          <div class="detail-section">
+            <h5>生成质量</h5>
+            <div class="detail-grid">
+              <div class="detail-item">
+                <span class="detail-label">测试问题数</span>
+                <span class="detail-value">{{ evaluationResult.detailed_metrics.generation?.totalQuestions || 0 }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">平均连贯性</span>
+                <span class="detail-value">{{ ((evaluationResult.detailed_metrics.generation?.avgCoherenceScore || 0) * 100).toFixed(1) }}%</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">平均完整性</span>
+                <span class="detail-value">{{ ((evaluationResult.detailed_metrics.generation?.avgCompletenessScore || 0) * 100).toFixed(1) }}%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 评估方法说明 -->
+          <div class="methodology-section">
+            <h5>📚 评估方法</h5>
+            <div class="methodology-content">
+              <p><strong>测试数据集规模：</strong>{{ evaluationResult.methodology?.test_dataset_size || 0 }} 个测试用例</p>
+              <div class="method-list">
+                <div v-for="method in evaluationResult.methodology?.evaluation_methods || []" :key="method" class="method-item">
+                  • {{ method }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 文档详情查看模态框 -->
+    <div v-if="showSourceModal" class="modal-overlay" @click="closeSourceModal">
+      <div class="modal-container large" @click.stop>
+        <div class="modal-header">
+          <h3>📄 文档详情</h3>
+          <button @click="closeSourceModal" class="close-btn">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="source-detail">
+            <div class="source-detail-header">
+              <h4>{{ currentSourceDetail.title || '未命名文档' }}</h4>
+              <div class="source-badges">
+                <span class="rank-badge">#{{ currentSourceDetail.rank }}</span>
+                <span class="score-badge" :style="{ background: getScoreColor(currentSourceDetail.score) }">
+                  {{ (currentSourceDetail.score * 100).toFixed(1) }}% 匹配
+                </span>
+                <span class="type-badge">{{ currentSourceDetail.type }}</span>
+              </div>
+            </div>
+            
+            <div class="source-content-full">
+              {{ currentSourceDetail.content }}
+            </div>
+            
+            <div class="source-meta-info">
+              <div class="meta-row">
+                <span class="meta-label">内容长度：</span>
+                <span class="meta-value">{{ currentSourceDetail.content.length }} 字符</span>
+              </div>
+              <div v-if="currentSourceDetail.chunkIndex !== undefined" class="meta-row">
+                <span class="meta-label">文档片段：</span>
+                <span class="meta-value">第 {{ currentSourceDetail.chunkIndex + 1 }} 个片段</span>
+              </div>
+              <div v-if="currentSourceDetail.fusion_details" class="meta-row">
+                <span class="meta-label">融合详情：</span>
+                <span class="meta-value">
+                  语义: {{ (currentSourceDetail.fusion_details.semantic_rrfScore || 0).toFixed(4) }}, 
+                  BM25: {{ (currentSourceDetail.fusion_details.bm25_rrfScore || 0).toFixed(4) }}, 
+                  总分: {{ (currentSourceDetail.fusion_details.total_rrfScore || 0).toFixed(4) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button @click="closeSourceModal" class="btn btn-secondary">
+            关闭
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -246,21 +439,21 @@ const processLogs = ref([]);
 const queryResult = ref(null);
 const answerExpanded = ref(false);
 
+// 文档详情模态框
+const showSourceModal = ref(false);
+const currentSourceDetail = ref({});
+
+// 评估相关状态
+const isEvaluating = ref(false);
+const evaluationResult = ref(null);
+const showEvaluationDetails = ref(false);
+const isRebuilding = ref(false);
+
 // 查询配置
 const useSemanticSearch = ref(true);
 const useBM25 = ref(true);
 const useRRF = ref(true);
 const topK = ref(5);
-
-// 技术栈配置
-const techStack = [
-  { icon: '🔗', name: 'LangChain', desc: '文档处理框架' },
-  { icon: '🤗', name: 'HuggingFace', desc: 'Embedding生成' },
-  { icon: '🗄️', name: 'MongoDB', desc: '文档存储' },
-  { icon: '🔍', name: 'Hybrid Search', desc: '混合检索' },
-  { icon: '🎯', name: 'RRF', desc: '结果融合' },
-  { icon: '🧠', name: 'DeepSeek', desc: 'LLM生成' }
-];
 
 // Pipeline步骤
 const pipelineSteps = [
@@ -284,16 +477,22 @@ const validSources = computed(() => {
   
   return queryResult.value.sources
     .filter(source => source.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .map(source => ({
-      ...source,
-      expanded: false  // 添加展开状态
-    }));
+    .sort((a, b) => b.score - a.score);
 });
 
-// 切换文档展开状态
-const toggleExpand = (source) => {
-  source.expanded = !source.expanded;
+// 查看文档详情
+const viewSourceDetail = (source, index) => {
+  currentSourceDetail.value = {
+    ...source,
+    rank: index + 1
+  };
+  showSourceModal.value = true;
+};
+
+// 关闭文档详情模态框
+const closeSourceModal = () => {
+  showSourceModal.value = false;
+  currentSourceDetail.value = {};
 };
 
 // 文件处理
@@ -338,7 +537,7 @@ const processDocument = async () => {
     // 调用后端API
     const response = await api.processWithRAG(docContent.value, docTitle.value);
     
-    addLog('success', '✅', `文档处理完成！生成了 ${response.chunks} 个文档块`);
+    addLog('success', '✅', `文档处理完成：生成了 ${response.chunks} 个文档块`);
     
   } catch (error) {
     addLog('error', '❌', `处理失败: ${error.message}`);
@@ -392,6 +591,70 @@ const executeRAGQuery = async () => {
   }
 };
 
+// 运行性能评估
+const runEvaluation = async () => {
+  if (isEvaluating.value) return;
+  
+  isEvaluating.value = true;
+  evaluationResult.value = null;
+  showEvaluationDetails.value = false;
+  
+  try {
+    addLog('info', '🧪', '开始运行性能评估...');
+    
+    const startTime = Date.now();
+    const result = await api.runEvaluation();
+    const duration = Date.now() - startTime;
+    
+    evaluationResult.value = result;
+    
+    addLog('success', '📊', `评估完成! 综合得分: ${result.executive_summary.overallScore}, 耗时: ${duration}ms`);
+    
+  } catch (error) {
+    addLog('error', '❌', `评估失败: ${error.message}`);
+    console.error('性能评估失败:', error);
+  } finally {
+    isEvaluating.value = false;
+  }
+};
+
+// 重建RAG索引
+const rebuildRagIndex = async () => {
+  if (isRebuilding.value) return;
+  
+  if (!confirm('确定要清理并重建所有RAG索引吗？\n\n这将：\n1. 清空当前向量存储\n2. 重新处理所有笔记\n3. 解决重复索引问题\n\n此操作可能需要几分钟时间。')) {
+    return;
+  }
+  
+  isRebuilding.value = true;
+  
+  try {
+    addLog('info', '🧹', '开始清理并重建RAG索引...');
+    
+    const startTime = Date.now();
+    const result = await api.rebuildRagIndex();
+    const duration = Date.now() - startTime;
+    
+    addLog('success', '✅', `索引重建完成! 处理了 ${result.statistics.success_count}/${result.statistics.total_notes} 条笔记, 耗时: ${duration}ms`);
+    
+    // 如果有查询结果，清空它以避免显示旧数据
+    queryResult.value = null;
+    
+    alert(`RAG索引重建完成！\n\n📊 统计信息：\n• 总笔记数：${result.statistics.total_notes}\n• 成功处理：${result.statistics.success_count}\n• 失败数量：${result.statistics.failed_count}\n• 当前向量数：${result.statistics.current_stats.totalChunks}\n\n现在重复索引问题已解决！`);
+    
+  } catch (error) {
+    addLog('error', '❌', `索引重建失败: ${error.message}`);
+    alert('重建失败: ' + error.message);
+  } finally {
+    isRebuilding.value = false;
+  }
+};
+
+// 切换评估详情显示
+const toggleEvaluationDetails = () => {
+  showEvaluationDetails.value = !showEvaluationDetails.value;
+};
+
 // 添加日志
 const addLog = (type, icon, message) => {
   processLogs.value.push({
@@ -421,62 +684,6 @@ const getScoreColor = (score) => {
   padding: 0;
   max-width: 1400px;
   margin: 0 auto;
-}
-
-/* 头部样式 */
-.console-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.console-header h2 {
-  color: #1a202c;
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-}
-
-.console-header p {
-  color: #718096;
-}
-
-/* 技术栈展示 */
-.tech-stack-showcase {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.tech-card {
-  background: white;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 1.5rem;
-  text-align: center;
-  transition: all 0.3s;
-  cursor: pointer;
-}
-
-.tech-card:hover {
-  transform: translateY(-4px);
-  border-color: #667eea;
-  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.2);
-}
-
-.tech-icon {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-}
-
-.tech-name {
-  font-weight: 600;
-  color: #2d3748;
-  margin-bottom: 0.25rem;
-}
-
-.tech-desc {
-  font-size: 0.875rem;
-  color: #718096;
 }
 
 /* Pipeline流程图 */
@@ -801,6 +1008,27 @@ const getScoreColor = (score) => {
   margin-bottom: 1rem;
 }
 
+.enhancement-notice {
+  background: linear-gradient(135deg, #48bb7815, #38a16915);
+  border: 1px solid #48bb7830;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.enhancement-badge {
+  background: linear-gradient(135deg, #48bb78, #38a169);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
 .execution-steps-horizontal {
   display: flex;
   justify-content: space-between;
@@ -873,7 +1101,7 @@ const getScoreColor = (score) => {
   font-size: 1.25rem;
 }
 
-/* 检索结果 - 网格显示 */
+/* 检索结果 - 修改为列表显示 */
 .retrieval-results {
   background: #f7fafc;
   border-radius: 12px;
@@ -885,29 +1113,21 @@ const getScoreColor = (score) => {
   margin-bottom: 1rem;
 }
 
-.source-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+.source-list {
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
 }
 
-@media (min-width: 1200px) {
-  .source-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.source-card {
+.source-item {
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 1rem;
-  display: flex;
-  flex-direction: column;
   transition: all 0.3s;
 }
 
-.source-card:hover {
+.source-item:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
@@ -919,6 +1139,13 @@ const getScoreColor = (score) => {
   margin-bottom: 0.75rem;
 }
 
+.source-title-area {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
 .source-rank {
   background: #667eea;
   color: white;
@@ -926,6 +1153,21 @@ const getScoreColor = (score) => {
   border-radius: 6px;
   font-weight: 600;
   font-size: 0.75rem;
+  min-width: 40px;
+  text-align: center;
+}
+
+.source-title {
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.source-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .source-score {
@@ -936,30 +1178,7 @@ const getScoreColor = (score) => {
   font-weight: 600;
 }
 
-.source-title {
-  font-weight: 600;
-  color: #2d3748;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-}
-
-.source-content-preview {
-  color: #4a5568;
-  font-size: 0.875rem;
-  margin-bottom: 0.75rem;
-  line-height: 1.5;
-  flex: 1;
-}
-
-.source-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 0.75rem;
-  border-top: 1px solid #e2e8f0;
-}
-
-.expand-btn {
+.view-detail-btn {
   padding: 0.25rem 0.75rem;
   background: #edf2f7;
   color: #4a5568;
@@ -970,9 +1189,27 @@ const getScoreColor = (score) => {
   transition: all 0.3s;
 }
 
-.expand-btn:hover {
+.view-detail-btn:hover {
   background: #667eea;
   color: white;
+}
+
+.source-content-preview {
+  color: #4a5568;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+}
+
+.source-footer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e2e8f0;
+  font-size: 0.75rem;
+  color: #718096;
 }
 
 .source-type {
@@ -980,8 +1217,12 @@ const getScoreColor = (score) => {
   background: #edf2f7;
   color: #4a5568;
   border-radius: 4px;
-  font-size: 0.75rem;
   text-transform: uppercase;
+}
+
+.source-length,
+.chunk-info {
+  color: #718096;
 }
 
 /* 最终答案 */
@@ -995,6 +1236,27 @@ const getScoreColor = (score) => {
 .final-answer h4 {
   color: #2d3748;
   margin-bottom: 1rem;
+}
+
+.answer-quality-notice {
+  background: linear-gradient(135deg, #f6ad5515, #ed893615);
+  border: 1px solid #f6ad5530;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.quality-badge {
+  background: linear-gradient(135deg, #f6ad55, #ed8936);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
 .answer-content {
@@ -1020,6 +1282,22 @@ const getScoreColor = (score) => {
   gap: 1rem;
 }
 
+.expand-btn {
+  padding: 0.25rem 0.75rem;
+  background: #edf2f7;
+  color: #4a5568;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.expand-btn:hover {
+  background: #667eea;
+  color: white;
+}
+
 .answer-stats {
   display: flex;
   gap: 1.5rem;
@@ -1034,6 +1312,7 @@ const getScoreColor = (score) => {
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   padding: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .performance-monitor h3 {
@@ -1078,12 +1357,475 @@ const getScoreColor = (score) => {
   text-align: right;
 }
 
+/* 性能评估样式 */
+.evaluation-section {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.evaluation-section h3 {
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.eval-description {
+  color: #718096;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.eval-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.eval-btn {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.eval-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+}
+
+.eval-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.rebuild-btn {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #f6ad55, #ed8936);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rebuild-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(246, 173, 85, 0.3);
+}
+
+.rebuild-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.details-btn {
+  padding: 0.5rem 1rem;
+  background: #edf2f7;
+  color: #4a5568;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.details-btn:hover {
+  background: #667eea;
+  color: white;
+}
+
+.eval-results {
+  background: #f7fafc;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 2px solid #e2e8f0;
+}
+
+.eval-summary h4 {
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-item {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s;
+}
+
+.summary-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.summary-item.overall {
+  border: 2px solid #667eea;
+  background: linear-gradient(135deg, #667eea05, #764ba205);
+}
+
+.summary-label {
+  display: block;
+  color: #718096;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.summary-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+.summary-value.highlight {
+  color: #667eea;
+  font-size: 2rem;
+}
+
+.summary-value.success {
+  color: #48bb78;
+}
+
+.eval-insights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.insights-section {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.insights-section h5 {
+  color: #2d3748;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.insights-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.insights-list li {
+  color: #4a5568;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.insights-list li:before {
+  content: '•';
+  color: #667eea;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+.eval-details {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  margin-top: 1.5rem;
+}
+
+.eval-details h4 {
+  color: #2d3748;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.detail-section {
+  margin-bottom: 1.5rem;
+}
+
+.detail-section h5 {
+  color: #4a5568;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.detail-item {
+  background: #f7fafc;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+.detail-label {
+  display: block;
+  color: #718096;
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+.detail-value {
+  display: block;
+  color: #2d3748;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.methodology-section {
+  background: #f7fafc;
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+}
+
+.methodology-section h5 {
+  color: #4a5568;
+  margin-bottom: 0.75rem;
+}
+
+.methodology-content p {
+  color: #4a5568;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.method-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.method-item {
+  color: #4a5568;
+  font-size: 0.875rem;
+  padding-left: 0.5rem;
+}
+
+/* 文档详情模态框样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-container.large {
+  max-width: 800px;
+  max-height: 90vh;
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f9fa;
+}
+
+.modal-header h3 {
+  color: #2d3748;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #718096;
+  padding: 0.25rem;
+  transition: color 0.3s;
+}
+
+.close-btn:hover {
+  color: #e53e3e;
+}
+
+.modal-body {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  background: #f8f9fa;
+}
+
+/* 文档详情样式 */
+.source-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.source-detail-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.source-detail-header h4 {
+  color: #2d3748;
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.source-badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.rank-badge {
+  background: #667eea;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.score-badge {
+  padding: 0.25rem 0.75rem;
+  color: white;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.type-badge {
+  padding: 0.25rem 0.5rem;
+  background: #edf2f7;
+  color: #4a5568;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.source-content-full {
+  background: #f7fafc;
+  padding: 1.5rem;
+  border-radius: 8px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: #2d3748;
+  border: 1px solid #e2e8f0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.source-meta-info {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.meta-row {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.meta-label {
+  font-weight: 500;
+  color: #4a5568;
+  min-width: 80px;
+}
+
+.meta-value {
+  color: #2d3748;
+}
+
+/* 按钮样式 */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.btn-secondary {
+  background: #e2e8f0;
+  color: #4a5568;
+}
+
+.btn-secondary:hover {
+  background: #cbd5e0;
+}
+
 /* 响应式 */
 @media (max-width: 768px) {
-  .tech-stack-showcase {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
   .flow-container,
   .execution-steps-horizontal {
     flex-direction: column;
@@ -1099,8 +1841,19 @@ const getScoreColor = (score) => {
     display: none;
   }
   
-  .source-grid {
-    grid-template-columns: 1fr;
+  .modal-container {
+    max-width: 95%;
+    max-height: 95vh;
+  }
+  
+  .source-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .source-actions {
+    align-self: flex-end;
   }
 }
 </style>

@@ -1,4 +1,4 @@
-// services/aiService.js - DeepSeek AI服务（简历项目核心）
+// services/aiService.js - DeepSeek AI服务
 import axios from "axios";
 import logger from "../config/logger.js";
 

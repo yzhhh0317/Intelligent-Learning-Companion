@@ -1,4 +1,4 @@
-// services/enhancedRAG.js - 增强版RAG服务（集成HuggingFace Embeddings）
+// services/enhancedRAG.js - RAG服务（集成HuggingFace Embeddings）
 import { v4 as uuidv4 } from "uuid";
 import Note from "../models/Note.js";
 import logger from "../config/logger.js";
@@ -290,22 +290,34 @@ class EnhancedRAGService {
     return chunks.length > 0 ? chunks : [text];
   }
 
-  // 处理文档
-  async processDocument(content, title = "未命名文档") {
+  // 处理文档 - 支持使用现有ID避免重复索引
+  async processDocument(content, title = "未命名文档", existingNoteId = null) {
     await this.initialize();
 
     logger.info(`📄 处理文档: ${title}`);
     logger.info(
       `🧠 使用向量化方案: ${this.useHuggingFace ? "HuggingFace" : "TF-IDF"}`
     );
-    logger.info("━".repeat(50));
+    logger.info("─".repeat(50));
 
     // 1. 智能分块
     const chunks = this.splitText(content);
     logger.info(`✂️ 分块完成: ${chunks.length} 个语义块`);
 
     // 2. 生成向量并存储到内存
-    const docId = uuidv4();
+    let docId;
+    let isUpdate = false;
+
+    // 🔧 修复：如果提供了现有笔记ID，使用它而不是生成新ID
+    if (existingNoteId) {
+      docId = existingNoteId;
+      isUpdate = true;
+      logger.info(`🔄 更新现有文档: ${docId}`);
+    } else {
+      docId = uuidv4();
+      logger.info(`🆕 创建新文档: ${docId}`);
+    }
+
     let processedChunks = 0;
     const chunksWithVectors = [];
 
@@ -348,51 +360,75 @@ class EnhancedRAGService {
     try {
       logger.info("💾 保存向量数据到MongoDB...");
 
-      // 查找是否已存在同名文档
-      const existingNote = await Note.findOne({
-        title: title,
-        deleted: false,
-      });
-
       let note;
-      if (existingNote) {
-        // 更新现有文档
-        existingNote.content = content;
-        existingNote.chunks = chunksWithVectors;
-        existingNote.embedding_indexed = true;
-        existingNote.updated_at = new Date();
-        existingNote.metadata = {
-          ...existingNote.metadata,
-          rag_processed: true,
-          vector_count: chunksWithVectors.length,
-          embedding_method: this.useHuggingFace ? "huggingface" : "tfidf",
-          vector_dimension: this.vectorDimension,
-        };
-        note = await existingNote.save();
-        logger.info(`🔄 更新了现有文档: ${title}`);
-      } else {
-        // 创建新文档
-        note = new Note({
-          id: docId,
-          title,
-          content,
-          chunks: chunksWithVectors,
-          embedding_indexed: true,
-          tags: [
-            "RAG处理",
-            "向量索引",
-            this.useHuggingFace ? "HuggingFace" : "TF-IDF",
-          ],
-          content_type: "generated",
-          metadata: {
+      if (isUpdate) {
+        // 🔧 修复：更新现有笔记而不是查找同名文档
+        note = await Note.findOne({ id: docId, deleted: false });
+        if (note) {
+          note.content = content;
+          note.title = title;
+          note.chunks = chunksWithVectors;
+          note.embedding_indexed = true;
+          note.updated_at = new Date();
+          note.metadata = {
+            ...note.metadata,
             rag_processed: true,
             vector_count: chunksWithVectors.length,
             embedding_method: this.useHuggingFace ? "huggingface" : "tfidf",
             vector_dimension: this.vectorDimension,
-          },
+          };
+          note = await note.save();
+          logger.info(`🔄 更新了现有笔记: ${title}`);
+        } else {
+          throw new Error(`找不到ID为 ${docId} 的笔记`);
+        }
+      } else {
+        // 查找是否已存在同名文档（仅在创建新文档时）
+        const existingNote = await Note.findOne({
+          title: title,
+          deleted: false,
         });
-        await note.save();
-        logger.info(`📝 创建了新文档: ${title}`);
+
+        if (existingNote) {
+          // 更新现有文档
+          existingNote.content = content;
+          existingNote.chunks = chunksWithVectors;
+          existingNote.embedding_indexed = true;
+          existingNote.updated_at = new Date();
+          existingNote.metadata = {
+            ...existingNote.metadata,
+            rag_processed: true,
+            vector_count: chunksWithVectors.length,
+            embedding_method: this.useHuggingFace ? "huggingface" : "tfidf",
+            vector_dimension: this.vectorDimension,
+          };
+          note = await existingNote.save();
+          docId = existingNote.id; // 使用现有文档的ID
+          logger.info(`🔄 更新了现有文档: ${title}`);
+        } else {
+          // 创建新文档
+          note = new Note({
+            id: docId,
+            title,
+            content,
+            chunks: chunksWithVectors,
+            embedding_indexed: true,
+            tags: [
+              "RAG处理",
+              "向量索引",
+              this.useHuggingFace ? "HuggingFace" : "TF-IDF",
+            ],
+            content_type: "generated",
+            metadata: {
+              rag_processed: true,
+              vector_count: chunksWithVectors.length,
+              embedding_method: this.useHuggingFace ? "huggingface" : "tfidf",
+              vector_dimension: this.vectorDimension,
+            },
+          });
+          await note.save();
+          logger.info(`🆕 创建了新文档: ${title}`);
+        }
       }
 
       // 4. 存储文档信息到内存
@@ -411,7 +447,7 @@ class EnhancedRAGService {
         } 向量`
       );
       logger.info(`💾 存储完成: 文档ID ${docId}`);
-      logger.info("━".repeat(50));
+      logger.info("─".repeat(50));
 
       return {
         success: true,
@@ -422,6 +458,7 @@ class EnhancedRAGService {
         persisted: true,
         embedding_method: this.useHuggingFace ? "huggingface" : "tfidf",
         vector_dimension: this.vectorDimension,
+        isUpdate: isUpdate,
       };
     } catch (dbError) {
       logger.error("❌ MongoDB持久化失败:", dbError);
@@ -445,6 +482,7 @@ class EnhancedRAGService {
         persisted: false,
         warning: "数据库保存失败，仅在内存中可用",
         embedding_method: this.useHuggingFace ? "huggingface" : "tfidf",
+        isUpdate: isUpdate,
       };
     }
   }

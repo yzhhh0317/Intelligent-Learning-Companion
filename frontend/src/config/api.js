@@ -143,6 +143,19 @@ class APIService {
     return this.request("/api/rag/status");
   }
 
+  // ============ RAG 管理功能 ============
+  async rebuildRagIndex() {
+    return this.request("/api/rag/rebuild", {
+      method: "POST",
+    });
+  }
+
+  async clearRagIndex() {
+    return this.request("/api/rag/clear", {
+      method: "DELETE",
+    });
+  }
+
   // ============ 内容提取 ============
   async extractFromUrl(url) {
     return this.request("/api/content/extract-from-url", {
@@ -159,6 +172,13 @@ class APIService {
     return this.request("/api/chat/analyze");
   }
 
+  // ============ 性能评估 ============
+  async runEvaluation() {
+    return this.request("/api/evaluation/run", {
+      method: "POST",
+    });
+  }
+
   // ============ 演示信息 ============
   async getDemoInfo() {
     return this.request("/api/demo-info");
@@ -169,7 +189,7 @@ class APIService {
 const api = new APIService();
 export default api;
 
-// 为了兼容性，也导出各个方法
+// 导出各个方法
 export const {
   healthCheck,
   askQuestion,
@@ -187,4 +207,7 @@ export const {
   extractFromUrl,
   analyzeLearning,
   getDemoInfo,
+  runEvaluation,
+  rebuildRagIndex,
+  clearRagIndex,
 } = api;

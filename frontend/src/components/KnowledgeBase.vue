@@ -1,10 +1,5 @@
 <template>
   <div class="knowledge-base">
-    <!-- <div class="page-header">
-      <h2>📚 个人知识库</h2>
-      <p>管理你的学习笔记，支持语义搜索</p>
-    </div> -->
-
     <!-- 语义搜索 -->
     <div class="search-section">
       <h3>🔍 语义搜索</h3>
@@ -67,8 +62,8 @@
           <div class="note-header">
             <h4>{{ note.title }}</h4>
             <div class="note-actions">
-              <button @click="toggleNoteExpand(note)" class="action-btn expand">
-                {{ note.expanded ? '收起' : '展开' }}
+              <button @click="viewNote(note)" class="action-btn view">
+                查看全部
               </button>
               <button @click="editNote(note)" class="action-btn edit">
                 编辑
@@ -80,8 +75,7 @@
           </div>
           
           <div class="note-content-area">
-            <p v-if="!note.expanded" class="note-preview">{{ note.preview }}</p>
-            <div v-else class="note-full-content">{{ note.content }}</div>
+            <p class="note-preview">{{ note.preview }}</p>
           </div>
           
           <div class="note-footer">
@@ -116,6 +110,95 @@
         </button>
       </div>
     </div>
+
+    <!-- 查看笔记模态框 -->
+    <div v-if="showViewModal" class="modal-overlay" @click="closeViewModal">
+      <div class="modal-container" @click.stop>
+        <div class="modal-header">
+          <h3>📖 查看笔记</h3>
+          <button @click="closeViewModal" class="close-btn">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="note-view">
+            <h4 class="note-title">{{ currentNote.title }}</h4>
+            <div class="note-tags-view">
+              <span v-for="tag in currentNote.tags" :key="tag" class="tag">
+                {{ tag }}
+              </span>
+            </div>
+            <div class="note-content-full">{{ currentNote.content }}</div>
+            <div class="note-info">
+              <p><strong>创建时间：</strong>{{ formatDate(currentNote.created_at) }}</p>
+              <p><strong>更新时间：</strong>{{ formatDate(currentNote.updated_at) }}</p>
+              <p><strong>字数统计：</strong>{{ currentNote.statistics?.word_count || 0 }} 字</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button @click="editNote(currentNote)" class="btn btn-primary">
+            编辑笔记
+          </button>
+          <button @click="closeViewModal" class="btn btn-secondary">
+            关闭
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 编辑笔记模态框 -->
+    <div v-if="showEditModal" class="modal-overlay" @click="closeEditModal">
+      <div class="modal-container large" @click.stop>
+        <div class="modal-header">
+          <h3>✏️ 编辑笔记</h3>
+          <button @click="closeEditModal" class="close-btn">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="edit-form">
+            <div class="form-group">
+              <label>笔记标题</label>
+              <input 
+                v-model="editForm.title" 
+                type="text" 
+                class="form-input"
+                placeholder="输入笔记标题..."
+              />
+            </div>
+            
+            <div class="form-group">
+              <label>标签 (用逗号分隔)</label>
+              <input 
+                v-model="editForm.tagsString" 
+                type="text" 
+                class="form-input"
+                placeholder="例如：React, 前端开发, 学习笔记"
+              />
+            </div>
+            
+            <div class="form-group">
+              <label>笔记内容</label>
+              <textarea 
+                v-model="editForm.content" 
+                rows="15"
+                class="form-textarea"
+                placeholder="输入笔记内容..."
+              ></textarea>
+            </div>
+            
+            <div class="form-stats">
+              <span>字数统计: {{ editForm.content.length }} 字符</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button @click="saveNote" :disabled="isSaving" class="btn btn-primary">
+            {{ isSaving ? '保存中...' : '保存修改' }}
+          </button>
+          <button @click="closeEditModal" class="btn btn-secondary">
+            取消
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -135,6 +218,17 @@ const searchQuery = ref('');
 const searchResults = ref([]);
 const isSearching = ref(false);
 const hasSearched = ref(false);
+
+// 模态框状态
+const showViewModal = ref(false);
+const showEditModal = ref(false);
+const currentNote = ref({});
+const editForm = ref({
+  title: '',
+  content: '',
+  tagsString: ''
+});
+const isSaving = ref(false);
 
 // 加载统计信息
 const loadStats = async () => {
@@ -180,25 +274,75 @@ const searchByTag = (tag) => {
   performSearch();
 };
 
-// 获取数据库状态文本
-const getDatabaseStatusText = () => {
-  switch (stats.value.database_status) {
-    case 'mongodb': return 'MongoDB';
-    case 'memory': return '内存存储';
-    case 'healthy': return '正常';
-    default: return '未知';
-  }
-};
-
-// 切换笔记展开状态
-const toggleNoteExpand = (note) => {
-  note.expanded = !note.expanded;
+// 查看笔记
+const viewNote = (note) => {
+  currentNote.value = note;
+  showViewModal.value = true;
 };
 
 // 编辑笔记
 const editNote = (note) => {
-  // 这里可以打开编辑对话框或跳转到编辑页面
-  alert(`编辑笔记: ${note.title}`);
+  currentNote.value = note;
+  editForm.value = {
+    title: note.title,
+    content: note.content,
+    tagsString: note.tags ? note.tags.join(', ') : ''
+  };
+  showViewModal.value = false; // 如果是从查看模态框切换过来的
+  showEditModal.value = true;
+};
+
+// 保存笔记
+const saveNote = async () => {
+  if (isSaving.value) return;
+  
+  isSaving.value = true;
+  
+  try {
+    const tags = editForm.value.tagsString
+      .split(',')
+      .map(tag => tag.trim())
+      .filter(tag => tag.length > 0);
+    
+    const noteData = {
+      title: editForm.value.title,
+      content: editForm.value.content,
+      tags: tags
+    };
+    
+    await api.updateNote(currentNote.value.id, noteData);
+    
+    // 更新本地数据
+    const noteIndex = recentNotes.value.findIndex(n => n.id === currentNote.value.id);
+    if (noteIndex !== -1) {
+      recentNotes.value[noteIndex] = {
+        ...recentNotes.value[noteIndex],
+        ...noteData,
+        updated_at: new Date().toISOString()
+      };
+    }
+    
+    showEditModal.value = false;
+    alert('笔记更新成功！');
+    
+  } catch (error) {
+    console.error('保存失败:', error);
+    alert('保存失败: ' + error.message);
+  } finally {
+    isSaving.value = false;
+  }
+};
+
+// 关闭模态框
+const closeViewModal = () => {
+  showViewModal.value = false;
+  currentNote.value = {};
+};
+
+const closeEditModal = () => {
+  showEditModal.value = false;
+  currentNote.value = {};
+  editForm.value = { title: '', content: '', tagsString: '' };
 };
 
 // 删除笔记
@@ -206,9 +350,7 @@ const deleteNote = async (noteId) => {
   if (!confirm('确定要删除这条笔记吗？')) return;
   
   try {
-    // 调用API删除笔记
     await api.deleteNote(noteId);
-    // 重新加载笔记列表
     await loadRecentNotes();
     alert('笔记已删除');
   } catch (error) {
@@ -240,72 +382,6 @@ onMounted(() => {
   padding: 0;
   max-width: 1400px;
   margin: 15px;
-}
-
-.page-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.page-header h2 {
-  color: #333;
-  margin-bottom: 0.5rem;
-}
-
-.page-header p {
-  color: #666;
-  font-size: 0.95rem;
-}
-
-/* 统计卡片 */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.stat-card {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 1.5rem;
-  text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.stat-value {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #667eea;
-  margin-bottom: 0.5rem;
-}
-
-.stat-label {
-  font-size: 0.875rem;
-  color: #718096;
-}
-
-.status-dot {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #cbd5e0;
-}
-
-.status-dot.mongodb,
-.status-dot.healthy {
-  background: #48bb78;
-}
-
-.status-dot.memory {
-  background: #f6ad55;
 }
 
 /* 搜索部分 */
@@ -484,36 +560,21 @@ onMounted(() => {
   background: #edf2f7;
 }
 
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
 .note-item h4 {
   color: #2d3748;
-  margin-bottom: 0.5rem;
-}
-
-.note-preview {
-  color: #4a5568;
-  font-size: 0.875rem;
-  margin-bottom: 0.75rem;
-}
-
-.note-full-content {
-  color: #4a5568;
-  font-size: 0.875rem;
-  margin-bottom: 0.75rem;
-  white-space: pre-wrap;
-  line-height: 1.6;
-  background: #f7fafc;
-  padding: 1rem;
-  border-radius: 6px;
-}
-
-.note-content-area {
-  margin-bottom: 0.75rem;
+  margin: 0;
 }
 
 .note-actions {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 0.75rem;
 }
 
 .action-btn {
@@ -525,12 +586,12 @@ onMounted(() => {
   transition: all 0.3s;
 }
 
-.action-btn.expand {
+.action-btn.view {
   background: #edf2f7;
   color: #4a5568;
 }
 
-.action-btn.expand:hover {
+.action-btn.view:hover {
   background: #667eea;
   color: white;
 }
@@ -551,6 +612,12 @@ onMounted(() => {
 
 .action-btn.delete:hover {
   background: #f56565;
+}
+
+.note-preview {
+  color: #4a5568;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
 }
 
 .note-footer {
@@ -630,5 +697,234 @@ onMounted(() => {
   border-radius: 10px;
   font-size: 0.75rem;
   font-weight: 500;
+}
+
+/* 模态框样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-container.large {
+  max-width: 800px;
+  max-height: 90vh;
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f9fa;
+}
+
+.modal-header h3 {
+  color: #2d3748;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #718096;
+  padding: 0.25rem;
+  transition: color 0.3s;
+}
+
+.close-btn:hover {
+  color: #e53e3e;
+}
+
+.modal-body {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  background: #f8f9fa;
+}
+
+/* 查看笔记样式 */
+.note-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.note-title {
+  color: #2d3748;
+  font-size: 1.5rem;
+  margin: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.note-tags-view {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.note-content-full {
+  background: #f7fafc;
+  padding: 1.5rem;
+  border-radius: 8px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: #2d3748;
+  border: 1px solid #e2e8f0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.note-info {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 6px;
+  color: #4a5568;
+  font-size: 0.875rem;
+}
+
+.note-info p {
+  margin-bottom: 0.25rem;
+}
+
+/* 编辑表单样式 */
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.form-input {
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-textarea {
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.3s;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-stats {
+  color: #718096;
+  font-size: 0.875rem;
+  text-align: right;
+}
+
+/* 按钮样式 */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background: #667eea;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #5a67d8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: #e2e8f0;
+  color: #4a5568;
+}
+
+.btn-secondary:hover {
+  background: #cbd5e0;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .modal-container {
+    max-width: 95%;
+    max-height: 95vh;
+  }
+  
+  .note-actions {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .action-btn {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+  }
 }
 </style>
