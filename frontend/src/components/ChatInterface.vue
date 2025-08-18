@@ -71,13 +71,8 @@
         </div>
         
         <!-- 加载中 -->
-        <div v-if="isLoading" class="message ai-message loading">
-          <div class="typing-indicator">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <span>思考中...</span>
+        <div v-if="isLoading" class="message-row">
+          <SkeletonLoader type="message" />
         </div>
       </div>
     </div>
@@ -111,6 +106,7 @@
 <script setup>
 import { ref, nextTick } from 'vue';
 import api from '../config/api';
+import SkeletonLoader from './SkeletonLoader.vue';
 
 // 状态
 const messages = ref([]);
@@ -139,7 +135,7 @@ const sendQuestion = async () => {
   });
   
   currentQuestion.value = '';
-  isLoading.value = true;
+  isLoading.value = true; //触发骨架屏的显示
   
   try {
     const response = await api.askQuestion(question, useRAG.value);
@@ -164,7 +160,7 @@ const sendQuestion = async () => {
       time: new Date()
     });
   } finally {
-    isLoading.value = false;
+    isLoading.value = false; //隐藏骨架屏
   }
 };
 

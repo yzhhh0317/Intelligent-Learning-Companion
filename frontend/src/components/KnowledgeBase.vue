@@ -22,8 +22,14 @@
         </button>
       </div>
 
+      <!-- 加载时显示骨架屏 -->
+      <div v-if="isSearching" class="search-results">
+        <h4>搜索中...</h4>
+        <SkeletonLoader type="search" :count="3" />
+      </div>
+
       <!-- 搜索结果 -->
-      <div v-if="searchResults.length > 0" class="search-results">
+      <div v-else-if="searchResults.length > 0" class="search-results">
         <h4>搜索结果 ({{ searchResults.length }} 条)</h4>
         <div class="result-list">
           <div v-for="result in searchResults" :key="result.id" class="result-item">
@@ -57,7 +63,12 @@
         </button>
       </div>
 
-      <div v-if="recentNotes.length > 0" class="notes-list">
+      <!-- 笔记列表骨架屏 -->
+      <div v-if="isLoadingNotes" class="notes-loading">
+        <SkeletonLoader type="notes" :count="5" />
+      </div>
+
+      <div v-else-if="recentNotes.length > 0" class="notes-list">
         <div v-for="note in recentNotes" :key="note.id" class="note-item">
           <div class="note-header">
             <h4>{{ note.title }}</h4>
@@ -205,6 +216,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import api from '../config/api';
+import SkeletonLoader from './SkeletonLoader.vue';
 
 // 状态
 const stats = ref({
@@ -218,6 +230,7 @@ const searchQuery = ref('');
 const searchResults = ref([]);
 const isSearching = ref(false);
 const hasSearched = ref(false);
+const isLoadingNotes=ref(false)
 
 // 模态框状态
 const showViewModal = ref(false);
@@ -241,12 +254,15 @@ const loadStats = async () => {
 
 // 加载最近笔记
 const loadRecentNotes = async () => {
+  isLoadingNotes.value=true; //显示骨架屏
   try {
     const response = await api.getRecentNotes();
     recentNotes.value = response.notes || [];
   } catch (error) {
     console.error('加载笔记失败:', error);
     recentNotes.value = [];
+  }finally{
+    isLoadingNotes.value=false; //隐藏骨架屏
   }
 };
 
@@ -382,6 +398,15 @@ onMounted(() => {
   padding: 0;
   max-width: 1400px;
   margin: 15px;
+}
+
+.notes-loading {
+  margin-top: 1rem;
+}
+
+.search-results h4 {
+  color: #4a5568;
+  margin-bottom: 1rem;
 }
 
 /* 搜索部分 */

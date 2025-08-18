@@ -111,8 +111,13 @@
           </button>
         </div>
 
+        <!-- 加载时显示骨架屏 -->
+        <div v-if="isQuerying" class="query-result">
+          <SkeletonLoader type="rag" />
+        </div>
+
         <!-- 查询结果 -->
-        <div v-if="queryResult" class="query-result">
+        <div v-else-if="queryResult" class="query-result">
           <!-- Pipeline执行详情（横向显示） -->
           <div class="pipeline-details">
             <h4>⚡ Pipeline执行流程</h4>
@@ -425,6 +430,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import api from '../config/api';
+import SkeletonLoader from './SkeletonLoader.vue';
 
 // 状态管理
 const docTitle = ref('');
