@@ -101,8 +101,8 @@
       </div>
 
       <div v-else class="empty-state">
-        <p>📝 还没有学习笔记</p>
-        <small>去「内容处理」页面生成你的第一条笔记吧！</small>
+        <p>📡 还没有通信技术文档</p>
+        <small>去「内容处理」页面添加3GPP标准、IEEE论文等文档吧！</small>
       </div>
     </div>
 
@@ -181,7 +181,7 @@
                 v-model="editForm.tagsString" 
                 type="text" 
                 class="form-input"
-                placeholder="例如：React, 前端开发, 学习笔记"
+                placeholder="搜索5G标准、MIMO技术、信道模型等..."
               />
             </div>
             

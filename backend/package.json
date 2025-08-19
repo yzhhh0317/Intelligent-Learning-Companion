@@ -1,7 +1,7 @@
 {
   "name": "intelligent-learning-backend",
   "version": "1.0.0",
-  "description": "智能学习伴侣后端",
+  "description": "基于RAG的无线通信技术知识库",
   "main": "server.js",
   "type": "module",
   "scripts": {

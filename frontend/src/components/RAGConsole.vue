@@ -33,7 +33,7 @@
                  style="display: none">
           <div class="upload-content" @click="$refs.fileInput.click()">
             <div class="upload-icon">📤</div>
-            <p>拖拽文件到这里或点击上传</p>
+            <p>拖拽3GPP标准、IEEE论文到这里或点击上传</p>
             <p class="file-types">支持: TXT, MD, PDF, JSON</p>
           </div>
         </div>
@@ -79,7 +79,7 @@
       <div class="query-section">
         <div class="query-input-container">
           <textarea v-model="queryText" 
-                    placeholder="输入查询问题..."
+                    placeholder="输入通信技术问题，如：5G波束成形、LDPC编码、信道估计..."
                     rows="3"
                     class="query-input"></textarea>
           

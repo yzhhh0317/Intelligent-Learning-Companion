@@ -672,24 +672,24 @@ class EnhancedRAGService {
   generateMockResults(query, topK) {
     const mockData = [
       {
-        title: "RAG技术详解",
+        title: "5G NR物理层技术详解",
         content:
-          "RAG(Retrieval-Augmented Generation)是检索增强生成技术，结合了信息检索和文本生成。它通过检索相关文档为大语言模型提供上下文，从而生成更准确、更有针对性的回答。RAG技术包括文档处理、向量化、检索、生成等步骤。使用HuggingFace的sentence-transformers模型可以大大提升向量质量。",
+          "5G新无线(NR)物理层采用了多项关键技术，包括massive MIMO、灵活的帧结构、先进的信道编码等。massive MIMO通过大规模天线阵列实现空间复用和波束成形，显著提升频谱效率。LDPC码和极化码作为信道编码方案，在不同场景下提供最优性能。毫米波频段的引入扩展了可用频谱资源...",
       },
       {
-        title: "React Hooks 完全指南",
+        title: "massive MIMO预编码算法研究",
         content:
-          "React Hooks 是 React 16.8 引入的新特性，允许在函数组件中使用状态和其他React特性。常用的Hooks包括useState、useEffect、useContext等。useState用于在函数组件中添加状态，useEffect用于处理副作用，如数据获取、订阅等。Hooks让函数组件拥有了类组件的所有能力。",
+          "massive MIMO系统中，预编码技术是实现空间复用的关键。线性预编码算法包括迫零(ZF)和最小均方误差(MMSE)等。ZF预编码通过消除用户间干扰实现空间分离，而MMSE预编码在抑制干扰的同时考虑噪声影响。非线性预编码如脏纸编码可以进一步提升性能，但复杂度较高...",
       },
       {
-        title: "语义搜索与向量数据库",
+        title: "毫米波通信系统设计挑战",
         content:
-          "语义搜索通过理解文本含义而非简单关键词匹配来检索信息。它使用向量embedding技术将文本转换为高维向量，然后通过向量相似度计算找到语义相关的内容。HuggingFace提供了多种预训练的sentence transformer模型，如all-MiniLM-L6-v2等。",
+          "毫米波通信面临严峻的传播特性挑战。高频段信号的高路径损耗和有限穿透能力要求采用高增益天线和波束成形技术。波束管理包括波束搜索、波束跟踪和波束恢复等过程。硬件非理想特性如相位噪声、功率放大器非线性等也需要在系统设计中考虑...",
       },
       {
-        title: "前端性能优化最佳实践",
+        title: "6G愿景与关键技术展望",
         content:
-          "前端性能优化包括多个层面：资源加载优化（压缩、缓存、CDN）、渲染优化（虚拟滚动、懒加载）、代码分割（按需加载）等。React应用可以使用React.memo、useMemo、useCallback等优化手段。webpack的代码分割和Tree Shaking也是重要的优化技术。",
+          "6G移动通信系统预计在2030年商用，将实现更高的数据速率、更低的时延和更广的连接。关键技术包括太赫兹通信、智能超表面、全息通信等。太赫兹频段提供极大带宽但传播损耗巨大。智能超表面通过可编程的电磁响应优化无线环境。空天地一体化网络架构将扩展覆盖范围...",
       },
     ];
 

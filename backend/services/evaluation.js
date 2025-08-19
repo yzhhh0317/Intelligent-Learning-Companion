@@ -6,73 +6,81 @@ import logger from "../config/logger.js";
 class EvaluationService {
   constructor() {
     this.testDatasets = {
-      // 标准问答对，用于准确率评估
       qaDataset: [
         {
-          question: "什么是React Hooks？",
+          question: "5G NR的物理层关键技术有哪些？",
           expectedKeywords: [
-            "函数组件",
-            "状态管理",
-            "生命周期",
-            "useState",
-            "useEffect",
+            "massive MIMO",
+            "波束成形",
+            "毫米波",
+            "LDPC编码",
+            "极化码",
           ],
-          category: "frontend",
+          category: "5G技术",
         },
         {
-          question: "RAG技术的核心组件有哪些？",
-          expectedKeywords: ["检索", "生成", "向量", "embedding", "语义搜索"],
-          category: "ai",
-        },
-        {
-          question: "如何优化前端性能？",
-          expectedKeywords: ["压缩", "缓存", "懒加载", "代码分割", "CDN"],
-          category: "performance",
-        },
-        {
-          question: "MongoDB和MySQL的区别？",
-          expectedKeywords: ["NoSQL", "文档数据库", "关系型", "ACID", "扩展性"],
-          category: "database",
-        },
-        {
-          question: "什么是微服务架构？",
+          question: "massive MIMO系统的预编码算法原理？",
           expectedKeywords: [
-            "服务拆分",
-            "独立部署",
-            "API通信",
-            "分布式",
-            "容器",
+            "线性预编码",
+            "ZF",
+            "MMSE",
+            "信道状态信息",
+            "空间复用",
           ],
-          category: "architecture",
+          category: "MIMO技术",
+        },
+        {
+          question: "OFDM调制的优缺点是什么？",
+          expectedKeywords: [
+            "多载波",
+            "循环前缀",
+            "频率选择性衰落",
+            "PAPR",
+            "同步",
+          ],
+          category: "调制技术",
+        },
+        {
+          question: "信道编码中LDPC和Turbo码的区别？",
+          expectedKeywords: [
+            "迭代译码",
+            "校验矩阵",
+            "码率",
+            "译码复杂度",
+            "性能",
+          ],
+          category: "信道编码",
+        },
+        {
+          question: "毫米波通信面临的主要挑战？",
+          expectedKeywords: [
+            "路径损耗",
+            "穿透能力",
+            "波束管理",
+            "硬件复杂度",
+            "干扰",
+          ],
+          category: "毫米波技术",
         },
       ],
 
-      // 检索测试集，用于召回率评估
       retrievalDataset: [
         {
-          query: "React Hooks使用方法",
-          relevantDocs: [
-            "react_hooks_guide",
-            "frontend_best_practices",
-            "component_state_management",
-          ],
+          query: "5G波束成形技术原理",
+          relevantDocs: ["5g_beamforming", "mimo_precoding", "antenna_array"],
           totalRelevant: 3,
         },
         {
-          query: "向量数据库原理",
-          relevantDocs: [
-            "vector_database_intro",
-            "embedding_algorithms",
-            "similarity_search",
-          ],
+          query: "LDPC编码算法实现",
+          relevantDocs: ["ldpc_encoding", "channel_coding", "error_correction"],
           totalRelevant: 3,
         },
         {
-          query: "Node.js性能优化",
+          query: "毫米波信道建模方法",
           relevantDocs: [
-            "nodejs_performance",
-            "backend_optimization",
-            "server_tuning",
+            "mmwave_channel",
+            "path_loss_model",
+            "fading_analysis",
           ],
           totalRelevant: 3,
         },

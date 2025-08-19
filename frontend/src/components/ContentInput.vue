@@ -12,7 +12,7 @@
         <input 
           v-model="title" 
           type="text" 
-          placeholder="例如：React Hooks 学习总结"
+          placeholder="例如：5G NR物理层技术总结"
           class="text-input"
         />
       </div>
@@ -27,7 +27,7 @@
         <textarea 
           v-model="content"
           rows="12"
-          placeholder="粘贴或输入你要学习的内容..."
+          placeholder="粘贴或输入3GPP标准、IEEE论文、技术报告等内容..."
           class="content-textarea"
         ></textarea>
       </div>

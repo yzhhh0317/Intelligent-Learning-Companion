@@ -7,8 +7,9 @@
         <div class="logo-section" v-if="!sidebarCollapsed">
           <span class="logo">🧠</span>
           <div class="app-info">
+            <h2>无线通信</h2>
             <h2>智能学习伴侣</h2>
-            <p class="subtitle">RAG增强学习助手</p>
+            <p class="subtitle">5G/6G技术知识库</p>
           </div>
         </div>
         <span class="logo-only" v-else>🧠</span>
@@ -73,7 +74,7 @@
         <div v-show="currentTab === 'chat'" class="tab-panel">
           <div class="page-header">
             <h1>🤖 智能问答</h1>
-            <p>基于个人知识库的智能问答系统</p>
+            <p>基于无线通信知识库的智能问答系统</p>
           </div>
           <ChatInterface />
         </div>

@@ -10,7 +10,7 @@
       <div class="info-icon">🧠</div>
       <div>
         <h4>RAG增强问答</h4>
-        <p>系统会自动检索你的个人知识库，结合历史学习内容提供个性化答案</p>
+        <p>系统会自动检索无线通信技术文档，结合5G/6G标准提供专业答案</p>
       </div>
     </div>
 
@@ -83,7 +83,7 @@
         v-model="currentQuestion"
         @keyup.enter="sendQuestion"
         type="text"
-        placeholder="问我任何学习相关的问题..."
+        placeholder="询问5G、6G、MIMO、信道编码等通信技术问题..."
         class="question-input"
         :disabled="isLoading"
       />
@@ -97,7 +97,7 @@
     </div>
 
     <div class="input-hint">
-      💡 试试问：React和Vue的区别、什么是RAG技术等
+      💡 试试问：波束成形原理、OFDM调制方式、信道估计算法等
       <span v-if="useRAG" class="rag-status">🧠 RAG增强已开启</span>
     </div>
   </div>
@@ -116,9 +116,9 @@ const isLoading = ref(false);
 
 // 示例问题
 const exampleQuestions = [
-  'React Hooks和Vue Composition API有什么区别？',
-  '什么是RAG技术？',
-  '如何优化前端性能？'
+  '5G NR和LTE在物理层有什么区别？',
+  'massive MIMO的预编码算法有哪些？', 
+  '毫米波通信的主要挑战是什么？'
 ];
 
 // 发送问题
