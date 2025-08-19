@@ -48,25 +48,25 @@ RAG Pipeline: 文档分块 → 向量化 → 混合检索 → RRF融合 → LLM�
 
 <!-- 在这里添加内容处理界面截图 -->
 
-![内容处理](images/content-processing.png)
+![内容处理](images/content.png)
 
 ### 💬 智能问答
 
 <!-- 在这里添加智能问答界面截图 -->
 
-![智能问答](images/chat-interface.png)
+![智能问答](images/chat.png)
 
 ### 📚 知识库管理
 
 <!-- 在这里添加知识库管理界面截图 -->
 
-![知识库管理](images/knowledge-base.png)
+![知识库管理](images/knowledge.png)
 
 ### 🚀 RAG 控制台
 
 <!-- 在这里添加RAG控制台界面截图 -->
 
-![RAG控制台](images/rag-console.png)
+![RAG控制台](images/ragConsole.png)
 
 ## 🚀 功能特性
 
