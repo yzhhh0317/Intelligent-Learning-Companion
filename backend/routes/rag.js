@@ -1,14 +1,19 @@
-// routes/rag.js - RAG专用路由
+// routes/rag.js - 简化的RAG路由
 import express from "express";
+import ragService from "../services/ragService.js";
 import aiService from "../services/aiService.js";
 import noteService from "../services/noteService.js";
+import { asyncHandler } from "../utils/errorHandler.js";
 import logger from "../config/logger.js";
 
 const router = express.Router();
 
-// RAG文档处理
-router.post("/process", async (req, res) => {
-  try {
+/**
+ * RAG文档处理
+ */
+router.post(
+  "/process",
+  asyncHandler(async (req, res) => {
     const { content, title } = req.body;
 
     if (!content || content.trim().length === 0) {
@@ -18,58 +23,68 @@ router.post("/process", async (req, res) => {
       });
     }
 
-    logger.info(`📄 RAG文档处理: ${title || "未命名文档"}`);
-    logger.info(`📏 内容长度: ${content.length} 字符`);
+    logger.info(`处理文档: ${title || "未命名文档"}`);
 
-    // 🔧 修正：使用enhancedRAG而不是simpleRAG
-    const { default: enhancedRAG } = await import("../services/enhancedRAG.js");
-    const result = await enhancedRAG.processDocument(
+    const result = await ragService.processDocument(
       content,
       title || "未命名文档"
     );
 
     // 同时保存到数据库
-    const note = await noteService.createNote({
-      title: title || "未命名文档",
-      content: content,
-      tags: ["RAG处理", "自动索引"],
-      content_type: "generated",
-      key_concepts: [],
-      metadata: {
-        rag_processed: true,
+    try {
+      const note = await noteService.createNote({
+        title: result.title,
+        content: content,
+        tags: ["RAG处理", "自动索引", result.embedding_method],
+        content_type: "generated",
+        metadata: {
+          rag_processed: true,
+          chunks: result.chunks,
+          doc_id: result.docId,
+          embedding_method: result.embedding_method,
+        },
+      });
+
+      logger.info(`文档已保存到数据库: ${note.id}`);
+
+      res.json({
+        status: "success",
+        docId: result.docId,
         chunks: result.chunks,
-        doc_id: result.docId,
-      },
-    });
+        title: result.title,
+        note_id: note.id,
+        processing_info: {
+          content_length: content.length,
+          chunks_created: result.chunks,
+          embedding_method: result.embedding_method,
+        },
+      });
+    } catch (saveError) {
+      logger.error("保存到数据库失败:", saveError);
 
-    logger.info(`✅ 文档处理完成: ${result.chunks} 个语义块`);
-    logger.info(`💾 已保存到数据库: ${note.id}`);
+      // 即使数据库保存失败，RAG处理成功也应该返回成功
+      res.json({
+        status: "success",
+        docId: result.docId,
+        chunks: result.chunks,
+        title: result.title,
+        warning: "RAG处理成功但数据库保存失败",
+        processing_info: {
+          content_length: content.length,
+          chunks_created: result.chunks,
+          embedding_method: result.embedding_method,
+        },
+      });
+    }
+  })
+);
 
-    res.json({
-      status: "success",
-      docId: result.docId,
-      chunks: result.chunks,
-      title: result.title,
-      note_id: note.id,
-      processing_info: {
-        content_length: content.length,
-        chunks_created: result.chunks,
-        indexed_vectors: result.chunks,
-      },
-    });
-  } catch (error) {
-    logger.error("RAG文档处理失败:", error);
-    res.status(500).json({
-      status: "error",
-      message: "文档处理失败",
-      error: error.message,
-    });
-  }
-});
-
-// RAG查询
-router.post("/query", async (req, res) => {
-  try {
+/**
+ * RAG查询
+ */
+router.post(
+  "/query",
+  asyncHandler(async (req, res) => {
     const { question } = req.body;
 
     if (!question || question.trim().length === 0) {
@@ -79,41 +94,14 @@ router.post("/query", async (req, res) => {
       });
     }
 
-    logger.info(`🔍 RAG查询: ${question}`);
+    logger.info(`RAG查询: ${question}`);
 
     const startTime = Date.now();
-    const pipelineSteps = [];
 
-    // Step 1: Query Embedding
-    const embeddingStart = Date.now();
-    logger.info("⚙️ 生成查询向量...");
-    pipelineSteps.push({
-      name: "Query Embedding",
-      time: `${Date.now() - embeddingStart}ms`,
-      tech: "HuggingFace/TF-IDF",
-      details: "查询向量化完成",
-    });
+    // 执行混合检索
+    const searchResults = await ragService.hybridSearch(question, 5);
 
-    // Step 2: Hybrid Search
-    const searchStart = Date.now();
-    logger.info("🔍 执行混合检索...");
-
-    // 🔧 修正：使用enhancedRAG
-    const { default: enhancedRAG } = await import("../services/enhancedRAG.js");
-    const searchResults = await enhancedRAG.hybridSearch(question, 5);
-
-    pipelineSteps.push({
-      name: "Hybrid Search",
-      time: `${Date.now() - searchStart}ms`,
-      tech: "Semantic + BM25 + RRF",
-      details: `检索到 ${searchResults.length} 个相关文档`,
-    });
-
-    // Step 3: Context Building
-    const contextStart = Date.now();
-    logger.info("📝 构建上下文...");
-
-    // 🔧 修复：构建用于aiService.ragAnswer的context格式
+    // 构建上下文
     const contextForRag = searchResults.map((result) => ({
       id: result.id,
       title: result.metadata?.title || "未知标题",
@@ -121,41 +109,15 @@ router.post("/query", async (req, res) => {
       score: result.score,
     }));
 
-    pipelineSteps.push({
-      name: "Context Building",
-      time: `${Date.now() - contextStart}ms`,
-      tech: "Advanced Context Structure",
-      details: `构建了 ${contextForRag.length} 个高质量上下文`,
-    });
-
-    // Step 4: Enhanced LLM Generation with Professional Prompt
-    const llmStart = Date.now();
-    logger.info("🧠 调用DeepSeek生成专业答案...");
-
-    // 🔧 修复：使用与智能问答相同的专业Prompt和逻辑
+    // 调用AI生成答案
     const response = await aiService.ragAnswer(question, contextForRag, "");
-    const answer = response.answer;
-
-    pipelineSteps.push({
-      name: "Enhanced LLM Generation",
-      time: `${Date.now() - llmStart}ms`,
-      tech: "DeepSeek + Professional Prompt",
-      details: `答案长度: ${answer.length} 字符`,
-    });
-
     const totalTime = Date.now() - startTime;
 
-    logger.info(`✅ RAG查询完成，总耗时: ${totalTime}ms`);
-    logger.info(`📊 使用了 ${searchResults.length} 个文档块`);
+    logger.info(`RAG查询完成，总耗时: ${totalTime}ms`);
 
-    // 构建响应
     res.json({
       status: "success",
-      answer,
-      pipeline: {
-        steps: pipelineSteps,
-        total_time: `${totalTime}ms`,
-      },
+      answer: response.answer,
       sources: searchResults.map((result, index) => ({
         id: result.id,
         title: result.metadata?.title || `文档片段 ${index + 1}`,
@@ -172,26 +134,18 @@ router.post("/query", async (req, res) => {
         ),
         has_relevant_context:
           searchResults.length > 0 && searchResults[0].score > 0.3,
-        enhancement: "使用专业Prompt工程，与智能问答相同的高质量生成逻辑",
       },
       totalTime: `${(totalTime / 1000).toFixed(2)}s`,
     });
-  } catch (error) {
-    logger.error("RAG查询失败:", error);
-    res.status(500).json({
-      status: "error",
-      message: "RAG查询失败",
-      error: error.message,
-    });
-  }
-});
+  })
+);
 
-// RAG系统状态
-router.get("/status", async (req, res) => {
+/**
+ * RAG系统状态
+ */
+router.get("/status", (req, res) => {
   try {
-    // 🔧 修正：使用enhancedRAG
-    const { default: enhancedRAG } = await import("../services/enhancedRAG.js");
-    const stats = enhancedRAG.getStats();
+    const stats = ragService.getStats();
 
     res.json({
       status: "operational",
@@ -228,14 +182,63 @@ router.get("/status", async (req, res) => {
   }
 });
 
-// 清空RAG知识库
-router.delete("/clear", async (req, res) => {
-  try {
-    // 🔧 修正：使用enhancedRAG
-    const { default: enhancedRAG } = await import("../services/enhancedRAG.js");
-    enhancedRAG.clear();
+/**
+ * 重建RAG索引
+ */
+router.post(
+  "/rebuild",
+  asyncHandler(async (req, res) => {
+    logger.info("开始清理并重建RAG索引...");
 
-    logger.info("🗑️ RAG知识库已清空");
+    // 清空当前索引
+    ragService.clear();
+
+    // 从数据库重新加载所有笔记
+    const { default: Note } = await import("../models/Note.js");
+    const allNotes = await Note.find({ deleted: false });
+
+    logger.info(`找到 ${allNotes.length} 条笔记需要重新索引`);
+
+    let successCount = 0;
+    let failedCount = 0;
+
+    for (const note of allNotes) {
+      try {
+        await ragService.processDocument(note.content, note.title, note.id);
+        successCount++;
+      } catch (error) {
+        logger.error(`处理笔记失败: ${note.title}`, error.message);
+        failedCount++;
+      }
+    }
+
+    const stats = ragService.getStats();
+    logger.info(`RAG索引重建完成: ${successCount}/${allNotes.length} 成功`);
+
+    res.json({
+      status: "success",
+      message: "RAG索引重建完成",
+      statistics: {
+        total_notes: allNotes.length,
+        success_count: successCount,
+        failed_count: failedCount,
+        current_stats: {
+          totalDocuments: stats.totalDocuments,
+          totalChunks: stats.totalChunks,
+          embedding_method: stats.embedding_method,
+        },
+      },
+    });
+  })
+);
+
+/**
+ * 清空RAG知识库
+ */
+router.delete("/clear", (req, res) => {
+  try {
+    ragService.clear();
+    logger.info("RAG知识库已清空");
 
     res.json({
       status: "success",
@@ -252,17 +255,18 @@ router.delete("/clear", async (req, res) => {
   }
 });
 
-// 删除特定文档
-router.delete("/document/:docId", async (req, res) => {
-  try {
+/**
+ * 删除特定文档
+ */
+router.delete(
+  "/document/:docId",
+  asyncHandler(async (req, res) => {
     const { docId } = req.params;
 
-    // 🔧 修正：使用enhancedRAG
-    const { default: enhancedRAG } = await import("../services/enhancedRAG.js");
-    const result = enhancedRAG.deleteDocument(docId);
+    const result = ragService.deleteDocument(docId);
 
     if (result) {
-      logger.info(`🗑️ 文档已删除: ${docId}`);
+      logger.info(`文档已删除: ${docId}`);
       res.json({
         status: "success",
         message: "文档已删除",
@@ -274,14 +278,7 @@ router.delete("/document/:docId", async (req, res) => {
         message: "文档不存在",
       });
     }
-  } catch (error) {
-    logger.error("删除文档失败:", error);
-    res.status(500).json({
-      status: "error",
-      message: "删除文档失败",
-      error: error.message,
-    });
-  }
-});
+  })
+);
 
 export default router;

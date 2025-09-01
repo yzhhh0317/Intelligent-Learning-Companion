@@ -10,13 +10,11 @@ router.get("/health", async (req, res) => {
     const mongoStatus =
       mongoose.connection.readyState === 1 ? "connected" : "disconnected";
 
-    // 获取RAG服务状态 - 🔧 修正：使用enhancedRAG
+    // 获取RAG服务状态 - 🔧 修正：使用ragService
     let vectorStats;
     try {
-      const { default: enhancedRAG } = await import(
-        "../services/enhancedRAG.js"
-      );
-      vectorStats = enhancedRAG.getStats();
+      const { default: ragService } = await import("../services/ragService.js");
+      vectorStats = ragService.getStats();
     } catch (ragError) {
       logger.warn("获取RAG状态失败:", ragError);
       vectorStats = {

@@ -328,13 +328,17 @@ const saveNote = async () => {
     
     await api.updateNote(currentNote.value.id, noteData);
     
-    // 更新本地数据
+    // 立即更新本地数据（只保留一次更新）
     const noteIndex = recentNotes.value.findIndex(n => n.id === currentNote.value.id);
     if (noteIndex !== -1) {
       recentNotes.value[noteIndex] = {
         ...recentNotes.value[noteIndex],
-        ...noteData,
-        updated_at: new Date().toISOString()
+        title: editForm.value.title,
+        content: editForm.value.content,
+        tags: tags,
+        updated_at: new Date().toISOString(),
+        // 更新预览文本
+        preview: editForm.value.content.substring(0, 200) + (editForm.value.content.length > 200 ? '...' : '')
       };
     }
     

@@ -66,7 +66,7 @@ RAG Pipeline: 文档分块 → 向量化 → 混合检索 → RRF融合 → LLM�
 
 <!-- 在这里添加RAG控制台界面截图 -->
 
-![RAG控制台](images/ragConsole.png)
+![RAG控制台](images/ragconsole.png)
 
 ## 🚀 功能特性
 
@@ -245,7 +245,7 @@ Content-Type: application/json
 
 <div align="center">
 
-**⭐ 如果这个项目对您有帮助，请给我们一个 Star！ ⭐**
+**⭐ 如果这个项目对您有帮助，请给我一个 Star！ ⭐**
 
 Made with ❤️ by [yzhhh](https://github.com/yzhhh0317)
 

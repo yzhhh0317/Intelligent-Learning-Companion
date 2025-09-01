@@ -1,8 +1,9 @@
 // routes/chat.js - 智能问答路由
 import express from "express";
-import enhancedRAG from "../services/enhancedRAG.js";
+import ragService from "../services/ragService.js";
 import aiService from "../services/aiService.js";
 import noteService from "../services/noteService.js";
+import { asyncHandler } from "../utils/errorHandler.js";
 import logger from "../config/logger.js";
 
 const router = express.Router();
@@ -10,8 +11,9 @@ const router = express.Router();
 /**
  * 智能问答 - RAG增强
  */
-router.post("/ask", async (req, res) => {
-  try {
+router.post(
+  "/ask",
+  asyncHandler(async (req, res) => {
     const { question, current_content, use_rag } = req.body;
 
     if (!question) {
@@ -32,7 +34,7 @@ router.post("/ask", async (req, res) => {
 
     // 如果启用RAG，检索相关文档
     if (use_rag) {
-      const searchResults = await enhancedRAG.hybridSearch(question, 3);
+      const searchResults = await ragService.hybridSearch(question, 3);
 
       if (searchResults.length > 0) {
         context = searchResults.map((result) => ({
@@ -71,21 +73,15 @@ router.post("/ask", async (req, res) => {
       processing_time: processingTime,
       rag_enabled: use_rag,
     });
-  } catch (error) {
-    logger.error("问答处理失败:", error);
-    res.status(500).json({
-      status: "error",
-      message: "问答处理失败",
-      error: error.message,
-    });
-  }
-});
+  })
+);
 
 /**
  * 生成内容摘要
  */
-router.post("/summary", async (req, res) => {
-  try {
+router.post(
+  "/summary",
+  asyncHandler(async (req, res) => {
     const { content } = req.body;
 
     if (!content) {
@@ -110,21 +106,15 @@ router.post("/summary", async (req, res) => {
       summary_length: result.summary_length,
       compression_ratio: result.compression_ratio,
     });
-  } catch (error) {
-    logger.error("摘要生成失败:", error);
-    res.status(500).json({
-      status: "error",
-      message: "摘要生成失败",
-      error: error.message,
-    });
-  }
-});
+  })
+);
 
 /**
  * 生成结构化笔记
  */
-router.post("/generate-notes", async (req, res) => {
-  try {
+router.post(
+  "/generate-notes",
+  asyncHandler(async (req, res) => {
     const { content, title, tags, auto_save = true } = req.body;
 
     if (!content) {
@@ -161,7 +151,7 @@ router.post("/generate-notes", async (req, res) => {
 
         // 索引到RAG向量数据库
         try {
-          await enhancedRAG.processDocument(result.notes, result.title);
+          await ragService.processDocument(result.notes, result.title);
           ragProcessed = true;
           logger.info(`🧠 已建立向量索引: ${savedNote.id}`);
         } catch (ragError) {
@@ -191,21 +181,15 @@ router.post("/generate-notes", async (req, res) => {
         concepts_found: result.key_concepts.length,
       },
     });
-  } catch (error) {
-    logger.error("笔记生成失败:", error);
-    res.status(500).json({
-      status: "error",
-      message: "笔记生成失败",
-      error: error.message,
-    });
-  }
-});
+  })
+);
 
 /**
  * 分析学习进度
  */
-router.get("/analyze", async (req, res) => {
-  try {
+router.get(
+  "/analyze",
+  asyncHandler(async (req, res) => {
     const days = parseInt(req.query.days) || 30;
 
     logger.info(`📊 分析最近 ${days} 天的学习进度`);
@@ -253,14 +237,7 @@ router.get("/analyze", async (req, res) => {
       notes_analyzed: recentNotes.length,
       period_days: days,
     });
-  } catch (error) {
-    logger.error("学习分析失败:", error);
-    res.status(500).json({
-      status: "error",
-      message: "学习分析失败",
-      error: error.message,
-    });
-  }
-});
+  })
+);
 
 export default router;

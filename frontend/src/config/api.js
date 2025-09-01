@@ -1,10 +1,10 @@
-// src/config/api.js - 前端API配置文件
+// src/config/api.js - 前端API配置文件（核心功能）
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 class APIService {
   constructor() {
     this.baseUrl = API_BASE_URL;
-    console.log("🔗 API Base URL:", this.baseUrl);
+    console.log("API Base URL:", this.baseUrl);
   }
 
   // 统一的请求方法
@@ -24,7 +24,7 @@ class APIService {
     }
 
     try {
-      console.log(`📡 API请求: ${config.method || "GET"} ${endpoint}`);
+      console.log(`API请求: ${config.method || "GET"} ${endpoint}`);
 
       const response = await fetch(url, config);
 
@@ -36,10 +36,10 @@ class APIService {
       }
 
       const data = await response.json();
-      console.log(`✅ API响应: ${endpoint} - 成功`);
+      console.log(`API响应: ${endpoint} - 成功`);
       return data;
     } catch (error) {
-      console.error(`❌ API错误: ${endpoint} -`, error.message);
+      console.error(`API错误: ${endpoint} -`, error.message);
       throw error;
     }
   }
@@ -167,16 +167,55 @@ class APIService {
     });
   }
 
+  // ============ 核心RAG评估功能 ============
+
+  // 检索质量评估
+  async evaluateRetrieval(sampleSize = 30) {
+    return this.request("/api/rag-evaluation/evaluate-retrieval", {
+      method: "POST",
+      body: { sample_size: sampleSize },
+    });
+  }
+
+  // 生成质量评估
+  async evaluateGeneration(sampleSize = 30) {
+    return this.request("/api/rag-evaluation/evaluate-generation", {
+      method: "POST",
+      body: { sample_size: sampleSize },
+    });
+  }
+
+  // 检索方法对比
+  async compareRetrievalMethods(sampleSize = 80) {
+    return this.request("/api/rag-evaluation/compare-methods", {
+      method: "POST",
+      body: { sample_size: sampleSize },
+    });
+  }
+
+  // 运行详细评估（整合三个核心功能）
+  async runCompleteRAGEvaluation(sampleSize = 80) {
+    return this.request("/api/rag-evaluation/run-core-evaluation", {
+      method: "POST",
+      body: { sample_size: sampleSize },
+    });
+  }
+
+  // 获取数据集信息
+  async getDatasetInfo() {
+    return this.request("/api/rag-evaluation/dataset-info");
+  }
+
+  // 快速评估
+  async quickEvaluation() {
+    return this.request("/api/rag-evaluation/quick-evaluation", {
+      method: "POST",
+    });
+  }
+
   // ============ 学习分析 ============
   async analyzeLearning() {
     return this.request("/api/chat/analyze");
-  }
-
-  // ============ 性能评估 ============
-  async runEvaluation() {
-    return this.request("/api/evaluation/run", {
-      method: "POST",
-    });
   }
 
   // ============ 演示信息 ============
@@ -207,7 +246,13 @@ export const {
   extractFromUrl,
   analyzeLearning,
   getDemoInfo,
-  runEvaluation,
   rebuildRagIndex,
   clearRagIndex,
+  // 核心RAG评估方法
+  evaluateRetrieval,
+  evaluateGeneration,
+  compareRetrievalMethods,
+  runCompleteRAGEvaluation,
+  getDatasetInfo,
+  quickEvaluation,
 } = api;

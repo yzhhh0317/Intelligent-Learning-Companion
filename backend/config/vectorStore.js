@@ -5,10 +5,10 @@ export async function initVectorStore() {
   try {
     logger.info("🧠 初始化向量存储系统...");
 
-    const { default: enhancedRAG } = await import("../services/enhancedRAG.js");
-    await enhancedRAG.initialize();
+    const { default: ragService } = await import("../services/ragService.js");
+    await ragService.initialize();
 
-    const stats = enhancedRAG.getStats();
+    const stats = ragService.getStats();
 
     if (stats.initialized) {
       logger.info("✅ 向量存储初始化成功");
